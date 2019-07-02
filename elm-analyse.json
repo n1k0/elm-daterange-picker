@@ -1,0 +1,14 @@
+{
+    "checks": {
+        "CoreArrayUsage": false,
+        "DebugLog": false,
+        "ExposeAll": false,
+        "ImportAll": false,
+        "MultiLineRecordFormatting": false,
+        "RedefineVariable": false,
+        "SingleFieldRecord": false,
+        "TriggerWords": false,
+        "UnusedValueConstructor": false,
+        "UseConsOverConcat": false
+    }
+}
