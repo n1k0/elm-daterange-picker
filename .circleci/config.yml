@@ -64,4 +64,4 @@ jobs:
       - run:
           name: Build app
           command: |
-            /tmp/sysconfcpus/bin/sysconfcpus -n 2 npm run build
+            /tmp/sysconfcpus/bin/sysconfcpus -n 2 elm make
