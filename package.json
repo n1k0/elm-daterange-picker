@@ -4,7 +4,8 @@
   "description": "A daterange picker in Elm.",
   "private": true,
   "scripts": {
-    "test": "elm-test"
+    "test": "elm-test",
+    "start": "elm-live demo/Main.elm --port=3000 --dir=demo/ -- --output=demo/app.js"
   },
   "repository": {
     "type": "git",
