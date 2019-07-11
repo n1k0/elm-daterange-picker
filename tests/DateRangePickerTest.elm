@@ -10,11 +10,15 @@ import Json.Encode as Encode
 import Test exposing (..)
 import Time exposing (Posix, utc)
 import Time.Extra as TE
-import TimeZone
 
 
-
--- Tests
+suite : Test
+suite =
+    describe "suite"
+        [ calendarTests
+        , helpersTests
+        , rangeTests
+        ]
 
 
 calendarTests : Test
@@ -150,15 +154,6 @@ rangeTests =
                 |> Expect.equal 7
                 |> asTest "should compute the number of days in a range"
             ]
-        ]
-
-
-suite : Test
-suite =
-    describe "suite"
-        [ calendarTests
-        , helpersTests
-        , rangeTests
         ]
 
 
