@@ -1,24 +1,31 @@
 module DateRangePicker exposing
-    ( Config
-    , State
-    , configure
-    , defaultConfig
-    , disable
-    , getValue
-    , init
-    , initWithToday
-    , isDisabled
-    , isOpened
-    , open
-    , panel
-    , setRange
+    ( Config, configure, defaultConfig
+    , State, init, initToday, getValue, disable, isDisabled, open, isOpened, setRange
+    , view, panel
     , subscriptions
-    , view
     )
 
-{-| TODO:
+{-| A configurable date range picker widget.
 
-  - handle css
+
+# Configuration
+
+@docs Config, configure, defaultConfig
+
+
+# State
+
+@docs State, init, initToday, getValue, disable, isDisabled, open, isOpened, setRange
+
+
+# View
+
+@docs view, panel
+
+
+# Subscriptions
+
+@docs subscriptions
 
 -}
 
@@ -121,32 +128,15 @@ type Msg
     | Set Range
 
 
-{-| Initializes a State using a Task for fetching today's date.
-
-    import Task
-
-    type Msg
-      = DateRangePickerCreated State
-
-    init defaultConfig Nothing
-      |> Task.perform DateRangePickerCreated
-
--}
-init : Config -> Maybe Range -> Task Never State
-init config selected =
-    Time.now |> Task.andThen (initWithToday config selected >> Task.succeed)
-
-
-{-| Initializes a State with today's date, if you know it already.
+{-| Initializes a State with the current day represented as a Posix.
 
     import Time
 
-    Time.now
-      |> Task.andThen (initWithToday defaultConfig Nothing >> Task.succeed)
+    init defaultConfig Nothing (Time.millisToPosix 0)
 
 -}
-initWithToday : Config -> Maybe Range -> Posix -> State
-initWithToday config selected today =
+init : Config -> Maybe Range -> Posix -> State
+init config selected today =
     let
         ( leftCal, rightCal ) =
             getCalendars config selected today
@@ -161,6 +151,22 @@ initWithToday config selected today =
         , step = Step.fromMaybe selected
         , today = today
         }
+
+
+{-| Initializes a State using a Task for fetching today's date.
+
+    import Task
+
+    type Msg
+      = DateRangePickerCreated State
+
+    initToday defaultConfig Nothing
+      |> Task.perform DateRangePickerCreated
+
+-}
+initToday : Config -> Maybe Range -> Task Never State
+initToday config selected =
+    Time.now |> Task.andThen (init config selected >> Task.succeed)
 
 
 getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
@@ -239,6 +245,13 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 , step = Step.fromMaybe dateRange
             }
 
+        Clear ->
+            { internal
+                | opened = False
+                , current = Nothing
+                , step = Step.fromMaybe Nothing
+            }
+
         Close ->
             { internal
                 | opened = False
@@ -270,9 +283,6 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 | leftCal = leftCal |> Helpers.startOfPreviousMonth utc
                 , rightCal = leftCal
             }
-
-        Clear ->
-            { internal | step = Step.fromMaybe Nothing }
 
         Set dateRange ->
             let
@@ -406,7 +416,7 @@ panel tagger (State internal) =
                 , type_ "button"
                 , onClick <| handleEvent tagger Close internal
                 ]
-                [ text "Cancel" ]
+                [ text "Close" ]
             , button
                 [ class "cancelBtn btn btn-sm btn-default"
                 , type_ "button"
@@ -425,25 +435,6 @@ panel tagger (State internal) =
 
 
 {-| The main DateRangePicker view.
-
-    import DateRangePicker
-
-    type alias Model =
-        { pickerState : DateRangePicker.State
-        }
-
-    type Msg
-        = DateRangePickerChanged DateRangePicker.State
-
-    update : Msg -> Model -> ( Model, Cmd Msg )
-    update msg model =
-        case msg of
-            DateRangePickerChanged state ->
-                ( { model | pickerState = state }, Cmd.none )
-
-    view : Model -> Html Msg
-    view model =
-        DateRangePicker.view DateRangePickerChanged model.pickerState
 
 If you only need the panel content, have a look at [`panel`](#panel).
 

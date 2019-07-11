@@ -1,13 +1,10 @@
-module DateRangePicker.Range exposing
-    ( Range
-    , between
-    , days
-    , decode
-    , encode
-    , format
-    , fromString
-    , toString
-    )
+module DateRangePicker.Range exposing (Range, between, days, decode, encode, format, fromString, toString)
+
+{-| Date range management.
+
+@docs Range, between, days, decode, encode, format, fromString, toString
+
+-}
 
 import DateRangePicker.Helpers as Helpers
 import Iso8601
