@@ -65,13 +65,12 @@ type alias Config =
 
 {-| A Config featuring the following default values:
 
-    { allowFuture = True
-    , applyRangeImmediately = True
-    , weekdayFormatter = Helpers.weekdayToString
-    , monthFormatter = Helpers.monthToString
-    , noRangeCaption = "N/A"
-    , weeksStartOn = Time.Mon
-    }
+  - `allowFuture`: `True`
+  - `applyRangeImmediately`: `True`
+  - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
+  - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
+  - `noRangeCaption`: `"N/A"`
+  - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
 -}
 defaultConfig : Config
@@ -85,7 +84,7 @@ defaultConfig =
     }
 
 
-{-| Helper for selectively altering defaultConfig:
+{-| Helper to selectively alter [`defaultConfig`](#defaultConfig):
 
     configure (\default -> { default | weeksStartOn = Time.Sun })
         |> init Nothing
@@ -132,7 +131,7 @@ type Msg
 
     import Time
 
-    init defaultConfig Nothing (Time.millisToPosix 0)
+    init defaultConfig Nothing (Time.millisToPosix 1562916362413)
 
 -}
 init : Config -> Maybe Range -> Posix -> State
@@ -153,15 +152,31 @@ init config selected today =
         }
 
 
-{-| Initializes a State using a Task for fetching today's date.
+{-| A Task for fetching and initializing a State with today's date.
 
+    import DateRangePicker as Picker
     import Task
+    import Time exposing (millisToPosix)
+
+    type alias Model =
+        { picker : Picker.State
+        }
 
     type Msg
-      = DateRangePickerCreated State
+        = PickerChanged Picker.State
 
-    initToday defaultConfig Nothing
-      |> Task.perform DateRangePickerCreated
+    init : () -> ( Model, Cmd Msg )
+    init _ =
+        ( { picker = Picker.init Nothing (millisToPosix 0) }
+        , initToday defaultConfig Nothing
+            |> Task.perform PickerChanged
+        )
+
+    update : Msg -> Model -> ( Model, Cmd Msg )
+    update msg model =
+        case msg of
+            PickerChanged state ->
+                { model | picker = state }
 
 -}
 initToday : Config -> Maybe Range -> Task Never State

@@ -15,7 +15,8 @@ import Time.Extra as TE
 
 
 {-| A time range between two
-[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
+[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix),
+`begin` being inclusive and `end` exclusive.
 -}
 type alias Range =
     { begin : Posix

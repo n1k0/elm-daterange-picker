@@ -5,12 +5,12 @@ A date range picker written in [Elm](https://elm-lang.org/).
 
 ## How is this useful?
 
-![](https://i.imgur.com/QGFAv6F.png)
+![](https://i.imgur.com/JEsB8ws.png)
 
 Selecting a date range is a common operation for many Web applications. While
-there are offerings in the Elm ecosystem, we couldn't find any equivalent of
-[daterangepicker](http://www.daterangepicker.com/), which this package takes a
-lot of inspiration from.
+there are offerings in the Elm ecosystem, we couldn't find any ergonomic
+equivalent of [daterangepicker](http://www.daterangepicker.com/), which this
+package takes a lot of inspiration from.
 
 ## Demo
 
