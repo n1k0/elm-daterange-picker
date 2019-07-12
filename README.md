@@ -34,6 +34,15 @@ any code changes will trigger a page reload. Neat!
 
 Then head to [localhost:3000](http://localhost:3000/) from your browser.
 
+### Hacking on the demo with Atom & Elmjutsu
+
+If you've configured Atom & Elmjutsu to use `./node_modules/.bin/elm` as the
+default path to the Elm executable, you'll need a trick for having the compiler
+working when editing `demo/Main.elm`:
+
+    mkdir -P demo/node_modules/.bin
+    ln -sf ../../../node_modules/.bin/elm demo/node_modules/.bin/elm
+
 ## License
 
 MIT
