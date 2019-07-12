@@ -54,14 +54,19 @@ jobs:
             mkdir -p test-reports
             /tmp/sysconfcpus/bin/sysconfcpus -n 2 npm test
 
+      - run:
+          name: Build app
+          command: |
+            /tmp/sysconfcpus/bin/sysconfcpus -n 2 elm make
+
+      - run:
+          name: Build demo
+          command: |
+            /tmp/sysconfcpus/bin/sysconfcpus -n 2 elm make demo/Main.elm
+
       - store_artifacts:
           path: test-reports/
           destination: tr1
 
       - store_test_results:
           path: test-reports/
-
-      - run:
-          name: Build app
-          command: |
-            /tmp/sysconfcpus/bin/sysconfcpus -n 2 elm make
