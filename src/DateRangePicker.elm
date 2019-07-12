@@ -394,8 +394,18 @@ Usage is similar to [`view`](#view).
 -}
 panel : (State -> msg) -> State -> Html msg
 panel tagger (State internal) =
+    let
+        onMouseUp msg =
+            custom "mouseup"
+                (Decode.succeed
+                    { message = msg
+                    , preventDefault = True
+                    , stopPropagation = True
+                    }
+                )
+    in
     div
-        [ class "EDRP__body" ]
+        [ class "EDRP__body", onMouseUp <| handleEvent tagger NoOp internal ]
         [ predefinedRangesView tagger internal
         , Calendar.view
             { allowFuture = internal.config.allowFuture
