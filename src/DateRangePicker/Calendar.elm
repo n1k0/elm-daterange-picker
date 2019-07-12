@@ -14,6 +14,7 @@ import Time.Extra as TE
 type alias Config msg =
     { allowFuture : Bool
     , monthFormatter : Time.Month -> String
+    , noOp : msg
     , pick : Posix -> msg
     , prev : Maybe msg
     , next : Maybe msg
@@ -55,7 +56,7 @@ weekdayNames weekdayFormatter weeksStartOn =
 
 
 dayCell : Config msg -> Posix -> Html msg
-dayCell { allowFuture, pick, step, target, today } day =
+dayCell { allowFuture, noOp, pick, step, target, today } day =
     let
         base =
             { active = False, start = False, end = False, inRange = False }
@@ -99,7 +100,7 @@ dayCell { allowFuture, pick, step, target, today } day =
                     [ onClick (pick day) ]
 
                 else
-                    []
+                    [ onClick noOp ]
                )
         )
         [ day |> Time.toDay utc |> String.fromInt |> text ]

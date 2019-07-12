@@ -21,12 +21,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     let
         config =
-            Picker.configure
-                (\default ->
-                    { default
-                        | allowFuture = False
-                    }
-                )
+            Picker.configure (\default -> { default | allowFuture = False })
     in
     ( Loading
     , Picker.initToday config Nothing

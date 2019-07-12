@@ -121,6 +121,7 @@ type Msg
     | Clear
     | Close
     | Next
+    | NoOp
     | Open
     | Prev
     | Pick Posix
@@ -279,6 +280,9 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 , rightCal = Helpers.startOfNextMonth utc rightCal
             }
 
+        NoOp ->
+            internal
+
         Open ->
             let
                 ( newLeftCal, newRightCal ) =
@@ -398,6 +402,7 @@ panel tagger (State internal) =
             , weeksStartOn = internal.config.weeksStartOn
             , pick = \posix -> handleEvent tagger (Pick posix) internal
             , next = Nothing
+            , noOp = handleEvent tagger NoOp internal
             , prev = Just (handleEvent tagger Prev internal)
             , step = internal.step
             , target = internal.leftCal
@@ -410,6 +415,7 @@ panel tagger (State internal) =
             , weeksStartOn = internal.config.weeksStartOn
             , pick = \posix -> handleEvent tagger (Pick posix) internal
             , next = Just (handleEvent tagger Next internal)
+            , noOp = handleEvent tagger NoOp internal
             , prev = Nothing
             , step = internal.step
             , target = internal.rightCal
