@@ -1,3 +1,135 @@
-* {
-  color: red;
+:root {
+  --edrp-background-color: #fff;
+  --edrp-font-color: #000;
+  --edrp-primary-color: rgb(127, 87, 201);
+  --edrp-primary-color-alpha: rgba(127, 87, 201, 0.3);
+  --edrp-border-color: lightgrey;
+}
+
+.EDRP {
+  position: relative;
+}
+
+.EDRP__body {
+  position: absolute;
+  top: 100%;
+  color: var(--edrp-font-color);
+  background: var(--edrp-background-color);
+  border: 1px solid var(--edrp-border-color);
+  border-radius: 5px;
+}
+
+.EDRP__button {
+  border: 1px solid var(--edrp-border-color);
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: inherit;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  margin-left: 5px;
+  color: var(--edrp-font-color);
+  background: var(--edrp-background-color);
+  cursor: pointer;
+}
+
+.EDRP__button--primary {
+  background: var(--edrp-primary-color);
+  border-color: var(--edrp-primary-color);
+  color: #fff;
+}
+
+.EDRP__button[disabled] {
+  opacity: .4;
+}
+
+.EDRPPresets {
+  float: left;
+}
+
+.EDRPPresets__list {
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+}
+
+.EDRPPresets__label {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.EDRPPresets__label--active {
+  background: var(--edrp-primary-color);
+  color: #fff;
+}
+
+.EDRPPresets__label:hover {
+  background: rgba(155, 155, 155, 0.3);
+}
+
+.EDRPCalendar {
+  float: left;
+  margin: 0 10px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.EDRPCalendar__cell {
+  padding: 7px 9px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.EDRPCalendar__cell:hover {
+  background: rgba(155, 155, 155, 0.3);
+}
+
+.EDRPCalendar__cell--active {
+  background: var(--edrp-primary-color);
+  color: #fff;
+}
+
+.EDRPCalendar__cell--inRange {
+  background: var(--edrp-primary-color-alpha);
+  border-radius: 0;
+}
+
+.EDRPCalendar__cell--end {
+  border-radius: 0 5px 5px 0;
+  background: var(--edrp-primary-color);
+}
+
+.EDRPCalendar__cell--off {
+  opacity: 0.3;
+  font-weight: normal;
+}
+
+.EDRPCalendar__cell--start {
+  border-radius: 5px 0 0 5px;
+  background: var(--edrp-primary-color);
+}
+
+.EDRPCalendar__table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.EDRPFoot {
+  clear: both;
+  background: rgba(155, 155, 155, 0.3);
+  border-top: 1px solid var(--edrp-border-color);
+  padding: 10px;
+}
+
+.EDRPFoot__actions {
+  float: right;
+}
+
+.EDRPFoot::after {
+  clear: both;
+  content: "";
+  display: table;
 }
