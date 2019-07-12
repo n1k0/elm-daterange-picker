@@ -1,8 +1,8 @@
 :root {
   --edrp-background-color: #fff;
-  --edrp-font-color: #000;
-  --edrp-primary-color: rgb(127, 87, 201);
-  --edrp-primary-color-alpha: rgba(127, 87, 201, 0.3);
+  --edrp-font-color: rgba(0, 0, 0, 0.8);
+  --edrp-primary-color: rgb(82, 143, 255);
+  --edrp-primary-color-alpha: rgba(82, 143, 255, 0.25);
   --edrp-border-color: lightgrey;
 }
 
@@ -13,7 +13,9 @@
 .EDRP__body {
   position: absolute;
   top: 100%;
+  color: rgba(0, 0, 0, 0.8);
   color: var(--edrp-font-color);
+  background: #fff;
   background: var(--edrp-background-color);
   border: 1px solid var(--edrp-border-color);
   border-radius: 5px;
@@ -28,12 +30,15 @@
   font-size: 0.8rem;
   border-radius: 3px;
   margin-left: 5px;
+  color: rgba(0, 0, 0, 0.8);
   color: var(--edrp-font-color);
+  background: #fff;
   background: var(--edrp-background-color);
   cursor: pointer;
 }
 
 .EDRP__button--primary {
+  background: #528fff;
   background: var(--edrp-primary-color);
   color: #fff;
 }
@@ -58,13 +63,19 @@
   border-radius: 3px;
 }
 
+.EDRPPresets__label:hover {
+  background: rgba(155, 155, 155, 0.3);
+}
+
 .EDRPPresets__label--active {
+  background: #528fff;
   background: var(--edrp-primary-color);
   color: #fff;
 }
 
-.EDRPPresets__label:hover {
-  background: rgba(155, 155, 155, 0.3);
+.EDRPPresets__label--active:hover {
+  background: #528fff;
+  background: var(--edrp-primary-color);
 }
 
 .EDRPCalendar {
@@ -87,6 +98,7 @@
 }
 
 .EDRPCalendar__cell--active {
+  background: #528fff;
   background: var(--edrp-primary-color);
   color: #fff;
 }
@@ -97,20 +109,24 @@
 }
 
 .EDRPCalendar__cell--inRange {
+  background: rgba(82, 143, 255, 0.25);
   background: var(--edrp-primary-color-alpha);
   border-radius: 0;
 }
 
 .EDRPCalendar__cell--inRange:hover {
+  background: rgba(82, 143, 255, 0.25);
   background: var(--edrp-primary-color-alpha);
 }
 
 .EDRPCalendar__cell--end {
   border-radius: 0 5px 5px 0;
+  background: #528fff;
   background: var(--edrp-primary-color);
 }
 
 .EDRPCalendar__cell--end:hover {
+  background: #528fff;
   background: var(--edrp-primary-color);
 }
 
@@ -121,10 +137,12 @@
 
 .EDRPCalendar__cell--start {
   border-radius: 5px 0 0 5px;
+  background: #528fff;
   background: var(--edrp-primary-color);
 }
 
 .EDRPCalendar__cell--start:hover {
+  background: #528fff;
   background: var(--edrp-primary-color);
 }
 

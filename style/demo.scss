@@ -2,9 +2,9 @@ $grey: rgb(155, 155, 155);
 
 :root { 
     --edrp-background-color: #fff;
-    --edrp-font-color: #000;
-    --edrp-primary-color: rgb(127, 87, 201);
-    --edrp-primary-color-alpha: rgba(127, 87, 201, 0.3);
+    --edrp-font-color: rgba(0, 0, 0, 0.8);
+    --edrp-primary-color: rgb(82, 143, 255);
+    --edrp-primary-color-alpha: rgba(82, 143, 255, 0.25);
     --edrp-border-color: lightgrey;
 } 
 
@@ -14,7 +14,9 @@ $grey: rgb(155, 155, 155);
     &__body {
         position: absolute;
         top: 100%;
+        color: rgba(0, 0, 0, 0.8);
         color: var(--edrp-font-color);
+        background: #fff;
         background: var(--edrp-background-color);
         border: 1px solid var(--edrp-border-color);
         border-radius: 5px;
@@ -29,11 +31,14 @@ $grey: rgb(155, 155, 155);
         font-size: 0.8rem;
         border-radius: 3px;
         margin-left: 5px;
+        color: rgba(0, 0, 0, 0.8);
         color: var(--edrp-font-color);
+        background: #fff;
         background: var(--edrp-background-color);
         cursor: pointer;
 
         &--primary {
+            background: rgb(82, 143, 255);
             background: var(--edrp-primary-color);
             color: #fff;
         }
@@ -57,13 +62,19 @@ $grey: rgb(155, 155, 155);
             padding: 5px 10px;
             border-radius: 3px;
 
-            &--active {
-                background: var(--edrp-primary-color);
-                color: #fff;
-            }
-
             &:hover {
                 background: rgba($grey, 0.3);
+            }
+
+            &--active {
+                background: rgb(82, 143, 255);
+                background: var(--edrp-primary-color);
+                color: #fff;
+
+                &:hover {
+                    background: rgb(82, 143, 255);
+                    background: var(--edrp-primary-color);
+                }
             }
         }
     }
@@ -86,6 +97,7 @@ $grey: rgb(155, 155, 155);
             }
 
             &--active { 
+                background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
                 color: #fff;
             }
@@ -96,19 +108,23 @@ $grey: rgb(155, 155, 155);
             }
 
             &--inRange {
+                background: rgba(82, 143, 255, 0.25);
                 background: var(--edrp-primary-color-alpha);
                 border-radius: 0;
 
                 &:hover {
+                    background: rgba(82, 143, 255, 0.25);
                     background: var(--edrp-primary-color-alpha);
                 }
             }
             
             &--end {
                 border-radius: 0 5px 5px 0;
+                background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
 
                 &:hover {
+                    background: rgb(82, 143, 255);
                     background: var(--edrp-primary-color);
                 }
             }
@@ -120,9 +136,11 @@ $grey: rgb(155, 155, 155);
 
             &--start {
                 border-radius: 5px 0 0 5px;
+                background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
 
                 &:hover {
+                    background: rgb(82, 143, 255);
                     background: var(--edrp-primary-color);
                 }
             }
