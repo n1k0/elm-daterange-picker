@@ -1,11 +1,14 @@
-elm-daterange-picker
-====================
+# elm-daterange-picker
 
 A date range picker written in [Elm](https://elm-lang.org/).
 
 ## How is this useful?
 
-![](https://i.imgur.com/JEsB8ws.png)
+Default theme:
+![](https://i.imgur.com/A7I9AKo.jpg)
+
+If you have questionable tastes, you can do that:
+![](https://i.imgur.com/B2acsjG.jpg)
 
 Selecting a date range is a common operation for many Web applications. While
 there are offerings in the Elm ecosystem, we couldn't find any ergonomic
@@ -19,11 +22,13 @@ You can look at how this package can be used by browsing this demo code
 
 ## Customize styles
 
+By default, we have not defined a font-family, so that the style fits any site.
+
 You can use the [demo.css] file or its [SCSS source] for fine-tuning the
 default styles of the datepicker.
 
 The default stylesheet uses CSS variables to help you tweaking most colors used
-by the component:
+by the component (just add **your** root colors **after** calling our CSS, and it's done.) :
 
 ```CSS
 :root {
@@ -66,4 +71,4 @@ working when editing `demo/Main.elm`:
 MIT
 
 [demo.css]: https://github.com/allo-media/elm-daterange-picker/blob/master/demo/demo.css
-[SCSS source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/demo.scss
+[scss source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/demo.scss
