@@ -85,14 +85,14 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
     in
     td
         ([ classList
-            [ ( "EDRPCalendar__cell", not disabled && Time.toMonth utc target == Time.toMonth utc day )
+            [ ( "EDRPCalendar__cell", True )
             , ( "EDRPCalendar__cell--today", Helpers.sameDay utc day today )
             , ( "EDRPCalendar__cell--active", active )
             , ( "EDRPCalendar__cell--inRange", inRange )
             , ( "EDRPCalendar__cell--start", start )
             , ( "EDRPCalendar__cell--end", end )
-            , ( "EDRPCalendar__cell EDRPCalendar__cell--disabled", disabled )
-            , ( "EDRPCalendar__cell EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
+            , ( "EDRPCalendar__cell--disabled", disabled )
+            , ( "EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
             ]
          , day |> Helpers.formatDate utc |> title
          ]
@@ -110,7 +110,7 @@ navLink : String -> Maybe msg -> Html msg
 navLink label maybeMsg =
     case maybeMsg of
         Just msg ->
-            th [ class <| label ++ " available", onClick msg ] [ span [] [] ]
+            th [ class <| "EDRPCalendar__nav " ++ label, onClick msg ] [ span [] [] ]
 
         Nothing ->
             th [] [ span [] [] ]
@@ -122,10 +122,10 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
                 [ tr []
-                    [ navLink "EDRPCalendar__nav EDRPCalendar__nav--prev" prev
-                    , th [ class "month", colspan 5 ]
+                    [ navLink "EDRPCalendar__nav--prev" prev
+                    , th [ colspan 5 ]
                         [ text (Helpers.shortMonth utc monthFormatter target) ]
-                    , navLink "EDRPCalendar__nav EDRPCalendar__nav--next" next
+                    , navLink "EDRPCalendar__nav--next" next
                     ]
                 , weekdayNames weekdayFormatter weeksStartOn
                     |> List.map (\name -> th [] [ text name ])
