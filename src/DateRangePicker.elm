@@ -424,7 +424,7 @@ panel tagger (State internal) =
             , monthFormatter = internal.config.monthFormatter
             }
         , div [ class "EDRPFoot" ]
-            [ span [ class "drp-selected" ]
+            [ span []
                 [ case internal.step of
                     Step.Initial ->
                         text "Hint: pick a start date"
