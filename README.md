@@ -17,13 +17,31 @@ package takes a lot of inspiration from.
 You can look at how this package can be used by browsing this demo code
 [here](https://github.com/allo-media/elm-daterange-picker/blob/master/demo/Main.elm).
 
+## Customize styles
+
+You can use the [demo.css] file or its [SCSS source] for fine-tuning the
+default styles of the datepicker.
+
+The default stylesheet uses CSS variables to help you tweaking most colors used
+by the component:
+
+```CSS
+:root {
+  --edrp-background-color: #fff;
+  --edrp-font-color: rgba(0, 0, 0, 0.8);
+  --edrp-primary-color: rgb(82, 143, 255);
+  --edrp-primary-color-alpha: rgba(82, 143, 255, 0.25);
+  --edrp-border-color: lightgrey;
+}
+```
+
 ## Install
 
     elm install allo-media/elm-daterange-picker
 
 ## Local install
 
-    npm i
+    npm install
 
 ## Run the demo
 
@@ -46,3 +64,6 @@ working when editing `demo/Main.elm`:
 ## License
 
 MIT
+
+[demo.css]: https://github.com/allo-media/elm-daterange-picker/blob/master/demo/demo.css
+[SCSS source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/demo.scss
