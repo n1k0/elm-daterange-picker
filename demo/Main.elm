@@ -1,4 +1,4 @@
-module Main exposing (Model, Msg(..), update, view)
+module Main exposing (main)
 
 import Browser
 import DateRangePicker as Picker
@@ -61,6 +61,7 @@ subscriptions model =
             Sub.none
 
 
+main : Program () Model Msg
 main =
     Browser.element
         { init = init
