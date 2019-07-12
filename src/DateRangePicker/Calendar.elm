@@ -121,10 +121,10 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
                 [ tr []
-                    [ navLink "prev" prev
+                    [ navLink "EDRPCalendar__nav EDRPCalendar__nav--prev" prev
                     , th [ class "month", colspan 5 ]
                         [ text (Helpers.shortMonth utc monthFormatter target) ]
-                    , navLink "next" next
+                    , navLink "EDRPCalendar__nav EDRPCalendar__nav--next" next
                     ]
                 , weekdayNames weekdayFormatter weeksStartOn
                     |> List.map (\name -> th [] [ text name ])

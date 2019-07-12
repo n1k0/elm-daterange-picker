@@ -1,3 +1,5 @@
+$grey: rgb(155, 155, 155);
+
 :root { 
     --edrp-background-color: #fff;
     --edrp-font-color: #000;
@@ -6,11 +8,10 @@
     --edrp-border-color: lightgrey;
 } 
 
-
 .EDRP {
     position: relative;
 
-    &__body { 
+    &__body {
         position: absolute;
         top: 100%;
         color: var(--edrp-font-color);
@@ -63,7 +64,7 @@
             }
 
             &:hover {
-                background: rgba(155, 155, 155, 0.3);
+                background: rgba($grey, 0.3);
             }
         }
     }
@@ -82,7 +83,7 @@
             font-size: 0.9rem;
 
             &:hover {
-                background: rgba(155, 155, 155, 0.3);
+                background: rgba($grey, 0.3);
             }
 
             &--active { 
@@ -113,6 +114,26 @@
 
         }
 
+        &__nav {
+            cursor: pointer;
+            height: 15px;
+            padding: 7px;
+            border-radius: 5px;
+            margin-bottom: 7px;
+
+            &:hover {
+                background: rgba($grey, 0.3);
+            }
+
+            &--prev {
+                content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 492 492"><path fill="rgba(155,155,155)" d="M464 207l1 1H136l103-104a27 27 0 0 0 0-38l-16-16c-5-6-12-8-19-8s-14 2-19 8L8 227a27 27 0 0 0 0 38l177 177c5 6 12 8 19 8s14-2 19-8l16-16a27 27 0 0 0 0-37L135 284h330c15 0 27-12 27-27v-23c0-15-13-27-28-27z"/></svg>');
+            }
+
+            &--next {
+                content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 492 492"><path fill="rgba(155,155,155)" d="M484 227L306 49a27 27 0 0 0-38 0l-16 16a27 27 0 0 0 0 38l104 105H27c-15 0-27 11-27 26v23c0 15 12 27 27 27h330L252 389a27 27 0 0 0 0 38l16 16a27 27 0 0 0 38 0l178-178a27 27 0 0 0 0-38z"/></svg>');
+            }
+        }
+
         &__table {
             border-spacing : 0;
             border-collapse : collapse;
@@ -121,7 +142,7 @@
 
     &Foot {
         clear: both;
-        background: rgba(155, 155, 155, 0.3);
+        background: rgba($grey, 0.3);
         border-top: 1px solid var(--edrp-border-color);
         padding: 10px;
 
