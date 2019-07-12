@@ -21,11 +21,11 @@ $grey: rgb(155, 155, 155);
     }
 
     &__button {
-        border: 1px solid var(--edrp-border-color);
+        border: 0;
         text-transform: uppercase;
         font-weight: bold;
         font-family: inherit;
-        padding: 3px 8px;
+        padding: 5px 8px;
         font-size: 0.8rem;
         border-radius: 3px;
         margin-left: 5px;
@@ -35,7 +35,6 @@ $grey: rgb(155, 155, 155);
 
         &--primary {
             background: var(--edrp-primary-color);
-            border-color: var(--edrp-primary-color);
             color: #fff;
         }
 
@@ -91,7 +90,11 @@ $grey: rgb(155, 155, 155);
                 color: #fff;
             }
 
-            
+            &--disabled {
+                text-decoration: line-through;
+                opacity: 0.5;
+            }
+
             &--inRange {
                 background: var(--edrp-primary-color-alpha);
                 border-radius: 0;
@@ -103,7 +106,7 @@ $grey: rgb(155, 155, 155);
             }
 
             &--off {
-                opacity: 0.3;
+                opacity: 0.5;
                 font-weight: normal;
             }
 
@@ -142,8 +145,7 @@ $grey: rgb(155, 155, 155);
 
     &Foot {
         clear: both;
-        background: rgba($grey, 0.3);
-        border-top: 1px solid var(--edrp-border-color);
+        background: rgba($grey, 0.2);
         padding: 10px;
 
         &__actions {

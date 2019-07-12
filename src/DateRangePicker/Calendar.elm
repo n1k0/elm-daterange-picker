@@ -90,7 +90,7 @@ dayCell { allowFuture, pick, step, target, today } day =
             , ( "EDRPCalendar__cell--inRange", inRange )
             , ( "EDRPCalendar__cell--start", start )
             , ( "EDRPCalendar__cell--end", end )
-            , ( "EDRPCalendar__cell ends off disabled", disabled )
+            , ( "EDRPCalendar__cell EDRPCalendar__cell--disabled", disabled )
             , ( "EDRPCalendar__cell EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
             ]
          , day |> Helpers.formatDate utc |> title

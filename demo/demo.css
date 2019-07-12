@@ -20,11 +20,11 @@
 }
 
 .EDRP__button {
-  border: 1px solid var(--edrp-border-color);
+  border: 0;
   text-transform: uppercase;
   font-weight: bold;
   font-family: inherit;
-  padding: 3px 8px;
+  padding: 5px 8px;
   font-size: 0.8rem;
   border-radius: 3px;
   margin-left: 5px;
@@ -35,7 +35,6 @@
 
 .EDRP__button--primary {
   background: var(--edrp-primary-color);
-  border-color: var(--edrp-primary-color);
   color: #fff;
 }
 
@@ -92,6 +91,11 @@
   color: #fff;
 }
 
+.EDRPCalendar__cell--disabled {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
 .EDRPCalendar__cell--inRange {
   background: var(--edrp-primary-color-alpha);
   border-radius: 0;
@@ -103,7 +107,7 @@
 }
 
 .EDRPCalendar__cell--off {
-  opacity: 0.3;
+  opacity: 0.5;
   font-weight: normal;
 }
 
@@ -139,8 +143,7 @@
 
 .EDRPFoot {
   clear: both;
-  background: rgba(155, 155, 155, 0.3);
-  border-top: 1px solid var(--edrp-border-color);
+  background: rgba(155, 155, 155, 0.2);
   padding: 10px;
 }
 
