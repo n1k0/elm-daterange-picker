@@ -84,14 +84,14 @@ dayCell { allowFuture, pick, step, target, today } day =
     in
     td
         ([ classList
-            [ ( "today", Helpers.sameDay utc day today )
-            , ( "active", active )
-            , ( "in-range", inRange )
-            , ( "start-date", start )
-            , ( "end-date", end )
-            , ( "available", not disabled && Time.toMonth utc target == Time.toMonth utc day )
-            , ( "ends off disabled", disabled )
-            , ( "off", Time.toMonth utc target /= Time.toMonth utc day )
+            [ ( "EDRPCalendar__cell", not disabled && Time.toMonth utc target == Time.toMonth utc day )
+            , ( "EDRPCalendar__cell--today", Helpers.sameDay utc day today )
+            , ( "EDRPCalendar__cell--active", active )
+            , ( "EDRPCalendar__cell--inRange", inRange )
+            , ( "EDRPCalendar__cell--start", start )
+            , ( "EDRPCalendar__cell--end", end )
+            , ( "EDRPCalendar__cell EDRPCalendar__cell--disabled", disabled )
+            , ( "EDRPCalendar__cell EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
             ]
          , day |> Helpers.formatDate utc |> title
          ]
@@ -117,24 +117,22 @@ navLink label maybeMsg =
 
 view : Config msg -> Html msg
 view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as config) =
-    div [ class "drp-calendar left" ]
-        [ div [ class "calendar-table" ]
-            [ table [ class "table-condensed" ]
-                [ thead []
-                    [ tr []
-                        [ navLink "prev" prev
-                        , th [ class "month", colspan 5 ]
-                            [ text (Helpers.shortMonth utc monthFormatter target) ]
-                        , navLink "next" next
-                        ]
-                    , weekdayNames weekdayFormatter weeksStartOn
-                        |> List.map (\name -> th [] [ text name ])
-                        |> tr []
+    div [ class "EDRPCalendar" ]
+        [ table [ class "EDRPCalendar__table" ]
+            [ thead []
+                [ tr []
+                    [ navLink "EDRPCalendar__nav EDRPCalendar__nav--prev" prev
+                    , th [ class "month", colspan 5 ]
+                        [ text (Helpers.shortMonth utc monthFormatter target) ]
+                    , navLink "EDRPCalendar__nav EDRPCalendar__nav--next" next
                     ]
-                , target
-                    |> fromPosix weeksStartOn
-                    |> List.map (List.map (dayCell config) >> tr [])
-                    |> tbody []
+                , weekdayNames weekdayFormatter weeksStartOn
+                    |> List.map (\name -> th [] [ text name ])
+                    |> tr []
                 ]
+            , target
+                |> fromPosix weeksStartOn
+                |> List.map (List.map (dayCell config) >> tr [])
+                |> tbody []
             ]
         ]

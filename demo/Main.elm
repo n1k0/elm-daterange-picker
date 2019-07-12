@@ -19,8 +19,17 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
+    let
+        config =
+            Picker.configure
+                (\default ->
+                    { default
+                        | allowFuture = False
+                    }
+                )
+    in
     ( Loading
-    , Picker.initToday Picker.defaultConfig Nothing
+    , Picker.initToday config Nothing
         |> Task.perform PickerChanged
     )
 

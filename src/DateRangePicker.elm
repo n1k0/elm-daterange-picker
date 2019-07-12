@@ -360,7 +360,10 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
     let
         entry ( name, range ) =
             li
-                [ classList [ ( "active", Step.toMaybe step == Just range ) ]
+                [ classList
+                    [ ( "EDRPPresets__label", True )
+                    , ( "EDRPPresets__label--active", Step.toMaybe step == Just range )
+                    ]
                 , if config.applyRangeImmediately then
                     onClick <| handleEvent tagger (Apply (Just range)) internal
 
@@ -369,11 +372,11 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
                 ]
                 [ text name ]
     in
-    div [ class "ranges" ]
+    div [ class "EDRPPresets" ]
         [ today
             |> defaultPredefinedRanges
             |> List.map entry
-            |> ul []
+            |> ul [ class "EDRPPresets__list" ]
         ]
 
 
@@ -388,7 +391,7 @@ Usage is similar to [`view`](#view).
 panel : (State -> msg) -> State -> Html msg
 panel tagger (State internal) =
     div
-        [ class "daterangepicker ltr show-ranges show-calendar opensright" ]
+        [ class "EDRP__body" ]
         [ predefinedRangesView tagger internal
         , Calendar.view
             { allowFuture = internal.config.allowFuture
@@ -414,7 +417,7 @@ panel tagger (State internal) =
             , weekdayFormatter = internal.config.weekdayFormatter
             , monthFormatter = internal.config.monthFormatter
             }
-        , div [ class "drp-buttons" ]
+        , div [ class "EDRPFoot" ]
             [ span [ class "drp-selected" ]
                 [ case internal.step of
                     Step.Initial ->
@@ -426,25 +429,27 @@ panel tagger (State internal) =
                     Step.Complete range ->
                         range |> Range.format utc |> text
                 ]
-            , button
-                [ class "cancelBtn btn btn-sm btn-default"
-                , type_ "button"
-                , onClick <| handleEvent tagger Close internal
+            , div [ class "EDRPFoot__actions" ]
+                [ button
+                    [ class "EDRP__button"
+                    , type_ "button"
+                    , onClick <| handleEvent tagger Close internal
+                    ]
+                    [ text "Close" ]
+                , button
+                    [ class "EDRP__button"
+                    , type_ "button"
+                    , HA.disabled (internal.step == Step.Initial)
+                    , onClick <| handleEvent tagger Clear internal
+                    ]
+                    [ text "Clear" ]
+                , button
+                    [ class "EDRP__button EDRP__button--primary"
+                    , type_ "button"
+                    , onClick <| handleEvent tagger (Apply (Step.toMaybe internal.step)) internal
+                    ]
+                    [ text "Apply" ]
                 ]
-                [ text "Close" ]
-            , button
-                [ class "cancelBtn btn btn-sm btn-default"
-                , type_ "button"
-                , HA.disabled (internal.step == Step.Initial)
-                , onClick <| handleEvent tagger Clear internal
-                ]
-                [ text "Clear" ]
-            , button
-                [ class "applyBtn btn btn-sm btn-primary"
-                , type_ "button"
-                , onClick <| handleEvent tagger (Apply (Step.toMaybe internal.step)) internal
-                ]
-                [ text "Apply" ]
             ]
         ]
 
@@ -456,11 +461,9 @@ If you only need the panel content, have a look at [`panel`](#panel).
 -}
 view : (State -> msg) -> State -> Html msg
 view tagger (State internal) =
-    -- FIXME: no inline style if possible
-    div [ style "position" "relative" ]
+    div [ class "EDRP" ]
         [ input
-            [ class "InputText fullWidth date-range"
-            , type_ "text"
+            [ type_ "text"
             , HA.disabled internal.disabled
             , Step.toMaybe internal.step
                 |> Maybe.map (Range.format utc)
