@@ -85,7 +85,7 @@ dayCell { allowFuture, pick, step, target, today } day =
     td
         ([ classList
             [ ( "EDRPCalendar__cell", not disabled && Time.toMonth utc target == Time.toMonth utc day )
-            , ( "today", Helpers.sameDay utc day today )
+            , ( "EDRPCalendar__cell--today", Helpers.sameDay utc day today )
             , ( "EDRPCalendar__cell--active", active )
             , ( "EDRPCalendar__cell--inRange", inRange )
             , ( "EDRPCalendar__cell--start", start )

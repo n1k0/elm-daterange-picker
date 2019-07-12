@@ -25,7 +25,7 @@ $grey: rgb(155, 155, 155);
         text-transform: uppercase;
         font-weight: bold;
         font-family: inherit;
-        padding: 5px 8px;
+        padding: 5px 10px;
         font-size: 0.8rem;
         border-radius: 3px;
         margin-left: 5px;
@@ -98,11 +98,19 @@ $grey: rgb(155, 155, 155);
             &--inRange {
                 background: var(--edrp-primary-color-alpha);
                 border-radius: 0;
+
+                &:hover {
+                    background: var(--edrp-primary-color-alpha);
+                }
             }
             
             &--end {
                 border-radius: 0 5px 5px 0;
                 background: var(--edrp-primary-color);
+
+                &:hover {
+                    background: var(--edrp-primary-color);
+                }
             }
 
             &--off {
@@ -113,6 +121,14 @@ $grey: rgb(155, 155, 155);
             &--start {
                 border-radius: 5px 0 0 5px;
                 background: var(--edrp-primary-color);
+
+                &:hover {
+                    background: var(--edrp-primary-color);
+                }
+            }
+
+            &--today {
+                outline: 1px dashed $grey;
             }
 
         }

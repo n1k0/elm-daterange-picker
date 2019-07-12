@@ -24,7 +24,7 @@
   text-transform: uppercase;
   font-weight: bold;
   font-family: inherit;
-  padding: 5px 8px;
+  padding: 5px 10px;
   font-size: 0.8rem;
   border-radius: 3px;
   margin-left: 5px;
@@ -101,8 +101,16 @@
   border-radius: 0;
 }
 
+.EDRPCalendar__cell--inRange:hover {
+  background: var(--edrp-primary-color-alpha);
+}
+
 .EDRPCalendar__cell--end {
   border-radius: 0 5px 5px 0;
+  background: var(--edrp-primary-color);
+}
+
+.EDRPCalendar__cell--end:hover {
   background: var(--edrp-primary-color);
 }
 
@@ -114,6 +122,14 @@
 .EDRPCalendar__cell--start {
   border-radius: 5px 0 0 5px;
   background: var(--edrp-primary-color);
+}
+
+.EDRPCalendar__cell--start:hover {
+  background: var(--edrp-primary-color);
+}
+
+.EDRPCalendar__cell--today {
+  outline: 1px dashed #9b9b9b;
 }
 
 .EDRPCalendar__nav {
