@@ -112,6 +112,7 @@ type alias InternalState =
     { config : Config
     , current : Maybe Range
     , disabled : Bool
+    , hovered : Maybe Posix
     , leftCal : Posix
     , rightCal : Posix
     , opened : Bool
@@ -124,6 +125,7 @@ type Msg
     = Apply (Maybe Range)
     | Clear
     | Close
+    | Hover Posix
     | Next
     | NoOp
     | Open
@@ -148,6 +150,7 @@ init config selected =
         { config = config
         , current = selected
         , disabled = False
+        , hovered = Nothing
         , leftCal = leftCal
         , rightCal = rightCal
         , opened = False
@@ -300,6 +303,17 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 , step = Step.fromMaybe internal.current
             }
 
+        Hover posix ->
+            { internal
+                | hovered =
+                    case step of
+                        Step.Begin _ ->
+                            Just posix
+
+                        _ ->
+                            Nothing
+            }
+
         Next ->
             { internal
                 | leftCal = rightCal
@@ -393,6 +407,27 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
 panel : (State -> msg) -> State -> Html msg
 panel tagger (State internal) =
     let
+        baseCalendar =
+            { allowFuture = internal.config.allowFuture
+            , hover = \posix -> handleEvent tagger (Hover posix) internal
+            , hovered = internal.hovered
+            , monthFormatter = internal.config.monthFormatter
+            , next = Nothing
+            , noOp = handleEvent tagger NoOp internal
+            , pick = \posix -> handleEvent tagger (Pick posix) internal
+            , prev = Nothing
+            , step = internal.step
+            , target = internal.today
+            , today = internal.today
+            , weekdayFormatter = internal.config.weekdayFormatter
+            , weeksStartOn = internal.config.weeksStartOn
+            }
+
+        allowNext =
+            internal.config.allowFuture
+                || (internal.rightCal |> TE.startOfMonth utc |> Time.posixToMillis)
+                < (internal.today |> TE.startOfMonth utc |> Time.posixToMillis)
+
         onMouseUp msg =
             custom "mouseup"
                 (Decode.succeed
@@ -411,30 +446,19 @@ panel tagger (State internal) =
         ]
         [ predefinedRangesView tagger internal
         , Calendar.view
-            { allowFuture = internal.config.allowFuture
-            , weeksStartOn = internal.config.weeksStartOn
-            , pick = \posix -> handleEvent tagger (Pick posix) internal
-            , next = Nothing
-            , noOp = handleEvent tagger NoOp internal
-            , prev = Just (handleEvent tagger Prev internal)
-            , step = internal.step
-            , target = internal.leftCal
-            , today = internal.today
-            , weekdayFormatter = internal.config.weekdayFormatter
-            , monthFormatter = internal.config.monthFormatter
+            { baseCalendar
+                | target = internal.leftCal
+                , prev = Just (handleEvent tagger Prev internal)
             }
         , Calendar.view
-            { allowFuture = internal.config.allowFuture
-            , weeksStartOn = internal.config.weeksStartOn
-            , pick = \posix -> handleEvent tagger (Pick posix) internal
-            , next = Just (handleEvent tagger Next internal)
-            , noOp = handleEvent tagger NoOp internal
-            , prev = Nothing
-            , step = internal.step
-            , target = internal.rightCal
-            , today = internal.today
-            , weekdayFormatter = internal.config.weekdayFormatter
-            , monthFormatter = internal.config.monthFormatter
+            { baseCalendar
+                | target = internal.rightCal
+                , next =
+                    if allowNext then
+                        Just (handleEvent tagger Next internal)
+
+                    else
+                        Nothing
             }
         , div [ class "EDRPFoot" ]
             [ span []

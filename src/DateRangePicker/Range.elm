@@ -79,8 +79,8 @@ endsAt (Range { end }) =
 {-| Checks if a [`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/TimePosix)
 is comprised within a [`Range`](#Range).
 -}
-between : Range -> Posix -> Bool
-between (Range { begin, end }) day =
+between : Posix -> Range -> Bool
+between day (Range { begin, end }) =
     posixToMillis day >= posixToMillis begin && posixToMillis day < posixToMillis end
 
 

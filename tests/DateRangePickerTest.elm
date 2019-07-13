@@ -110,19 +110,16 @@ rangeTests : Test
 rangeTests =
     describe "Range"
         [ describe "between"
-            [ begin
-                |> TE.addDays 1
-                |> Range.between sampleRange
+            [ sampleRange
+                |> Range.between (TE.addDays 1 begin)
                 |> Expect.equal True
                 |> asTest "should test if a datetime is comprised between a range"
-            , begin
-                |> TE.addDays 100
-                |> Range.between sampleRange
+            , sampleRange
+                |> Range.between (TE.addDays 100 begin)
                 |> Expect.equal False
                 |> asTest "should test if a datetime exceeds a range"
-            , begin
-                |> TE.addDays -100
-                |> Range.between sampleRange
+            , sampleRange
+                |> Range.between (TE.addDays -100 begin)
                 |> Expect.equal False
                 |> asTest "should test if a datetime is before a range"
             ]
