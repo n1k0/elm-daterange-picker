@@ -407,6 +407,22 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
 panel : (State -> msg) -> State -> Html msg
 panel tagger (State internal) =
     let
+        baseCalendar =
+            { allowFuture = internal.config.allowFuture
+            , hover = \posix -> handleEvent tagger (Hover posix) internal
+            , hovered = internal.hovered
+            , monthFormatter = internal.config.monthFormatter
+            , next = Nothing
+            , noOp = handleEvent tagger NoOp internal
+            , pick = \posix -> handleEvent tagger (Pick posix) internal
+            , prev = Nothing
+            , step = internal.step
+            , target = internal.today
+            , today = internal.today
+            , weekdayFormatter = internal.config.weekdayFormatter
+            , weeksStartOn = internal.config.weeksStartOn
+            }
+
         onMouseUp msg =
             custom "mouseup"
                 (Decode.succeed
@@ -425,34 +441,16 @@ panel tagger (State internal) =
         ]
         [ predefinedRangesView tagger internal
         , Calendar.view
-            { allowFuture = internal.config.allowFuture
-            , hover = \posix -> handleEvent tagger (Hover posix) internal
-            , hovered = internal.hovered
-            , monthFormatter = internal.config.monthFormatter
-            , next = Nothing
-            , noOp = handleEvent tagger NoOp internal
-            , pick = \posix -> handleEvent tagger (Pick posix) internal
-            , prev = Just (handleEvent tagger Prev internal)
-            , step = internal.step
-            , target = internal.leftCal
-            , today = internal.today
-            , weekdayFormatter = internal.config.weekdayFormatter
-            , weeksStartOn = internal.config.weeksStartOn
+            { baseCalendar
+                | next = Nothing
+                , prev = Just (handleEvent tagger Prev internal)
+                , target = internal.leftCal
             }
         , Calendar.view
-            { allowFuture = internal.config.allowFuture
-            , hover = \posix -> handleEvent tagger (Hover posix) internal
-            , hovered = internal.hovered
-            , monthFormatter = internal.config.monthFormatter
-            , next = Just (handleEvent tagger Next internal)
-            , noOp = handleEvent tagger NoOp internal
-            , pick = \posix -> handleEvent tagger (Pick posix) internal
-            , prev = Nothing
-            , step = internal.step
-            , target = internal.rightCal
-            , today = internal.today
-            , weekdayFormatter = internal.config.weekdayFormatter
-            , weeksStartOn = internal.config.weeksStartOn
+            { baseCalendar
+                | next = Just (handleEvent tagger Next internal)
+                , prev = Nothing
+                , target = internal.rightCal
             }
         , div [ class "EDRPFoot" ]
             [ span []
