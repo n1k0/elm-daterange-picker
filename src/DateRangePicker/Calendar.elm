@@ -14,6 +14,8 @@ import Time.Extra as TE
 type alias Config msg =
     { allowFuture : Bool
     , monthFormatter : Time.Month -> String
+    , hover : Posix -> msg
+    , hovered : Maybe Posix
     , noOp : msg
     , pick : Posix -> msg
     , prev : Maybe msg
@@ -55,13 +57,29 @@ weekdayNames weekdayFormatter weeksStartOn =
         |> List.map weekdayFormatter
 
 
+inRangePath : Maybe Posix -> Posix -> Posix -> Bool
+inRangePath maybeHovered begin day =
+    case maybeHovered of
+        Just hovered ->
+            Range.create begin hovered
+                |> Range.between day
+
+        Nothing ->
+            False
+
+
 dayCell : Config msg -> Posix -> Html msg
-dayCell { allowFuture, noOp, pick, step, target, today } day =
+dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
     let
         base =
-            { active = False, start = False, end = False, inRange = False }
+            { active = False
+            , start = False
+            , end = False
+            , inRange = False
+            , inPath = False
+            }
 
-        { active, start, end, inRange } =
+        { active, start, end, inRange, inPath } =
             case step of
                 Step.Initial ->
                     base
@@ -70,6 +88,7 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
                     { base
                         | active = sameDay utc begin day
                         , start = sameDay utc begin day
+                        , inPath = inRangePath hovered begin day
                     }
 
                 Step.Complete range ->
@@ -77,7 +96,7 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
                         | active = (range |> Range.beginsAt |> sameDay utc day) || (range |> Range.endsAt |> sameDay utc day)
                         , start = range |> Range.beginsAt |> sameDay utc day
                         , end = range |> Range.endsAt |> sameDay utc day
-                        , inRange = Range.between range day
+                        , inRange = range |> Range.between day
                     }
 
         disabled =
@@ -88,12 +107,13 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
             [ ( "EDRPCalendar__cell", True )
             , ( "EDRPCalendar__cell--today", sameDay utc day today )
             , ( "EDRPCalendar__cell--active", active )
-            , ( "EDRPCalendar__cell--inRange", inRange )
+            , ( "EDRPCalendar__cell--inRange", inRange || inPath )
             , ( "EDRPCalendar__cell--start", start )
             , ( "EDRPCalendar__cell--end", end )
             , ( "EDRPCalendar__cell--disabled", disabled )
             , ( "EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
             ]
+         , onMouseOver (hover day)
          , day |> Helpers.formatDate utc |> title
          ]
             ++ (if not disabled then
