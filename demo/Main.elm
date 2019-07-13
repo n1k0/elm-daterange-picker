@@ -56,7 +56,9 @@ view { config, picker } =
             p [] [ label [] children ]
     in
     div []
-        [ p []
+        [ h1 []
+            [ text "elm-daterange-picker" ]
+        , p []
             [ text "Selected: "
             , case Picker.getRange picker of
                 Just range ->
@@ -67,23 +69,42 @@ view { config, picker } =
             ]
         , div []
             [ field
-                [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | allowFuture = allow }) ] []
+                [ input
+                    [ type_ "checkbox"
+                    , onCheck (\allow -> UpdateConfig { config | allowFuture = allow })
+                    , checked config.allowFuture
+                    ]
+                    []
                 , text " Allow future"
                 ]
             , field
-                [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | applyRangeImmediately = allow }) ] []
+                [ input
+                    [ type_ "checkbox"
+                    , onCheck (\allow -> UpdateConfig { config | applyRangeImmediately = allow })
+                    , checked config.applyRangeImmediately
+                    ]
+                    []
                 , text " Apply predefined range immediately"
                 ]
             , field
                 [ text "No range caption "
-                , input [ type_ "text", onInput (\caption -> UpdateConfig { config | noRangeCaption = caption }) ] []
+                , input
+                    [ type_ "text"
+                    , onInput (\caption -> UpdateConfig { config | noRangeCaption = caption })
+                    , value config.noRangeCaption
+                    ]
+                    []
                 ]
             , field
                 [ text "Weeks start on "
                 , [ Time.Sat, Time.Sun, Time.Mon ]
                     |> List.map
                         (\day ->
-                            option [ value (dayToString day), selected (day == config.weeksStartOn) ] [ text (dayToString day) ]
+                            option
+                                [ value (dayToString day)
+                                , selected (day == config.weeksStartOn)
+                                ]
+                                [ text (dayToString day) ]
                         )
                     |> select [ onInput (\str -> UpdateConfig { config | weeksStartOn = dayFromString str }) ]
                 ]

@@ -126,7 +126,6 @@ type Msg
     | Prev
     | Pick Posix
     | Set Range
-    | Today Posix
 
 
 {-| Initializes a State.
@@ -166,8 +165,7 @@ init config selected =
 -}
 now : (State -> msg) -> State -> Cmd msg
 now tagger (State internal) =
-    Time.now
-        |> Task.andThen (\today -> update (Today today) internal |> State |> Task.succeed)
+    nowTask internal.config internal.current
         |> Task.perform tagger
 
 
@@ -294,15 +292,7 @@ update msg ({ leftCal, rightCal, step } as internal) =
             internal
 
         Open ->
-            let
-                ( newLeftCal, newRightCal ) =
-                    getCalendars internal.config internal.current internal.today
-            in
-            { internal
-                | opened = True
-                , leftCal = newLeftCal
-                , rightCal = newRightCal
-            }
+            { internal | opened = True }
 
         Pick picked ->
             { internal | step = step |> Step.next picked }
@@ -322,17 +312,6 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 | leftCal = newLeftCal
                 , rightCal = newRightCal
                 , step = Step.fromMaybe (Just dateRange)
-            }
-
-        Today today ->
-            let
-                ( newLeftCal, newRightCal ) =
-                    getCalendars internal.config internal.current today
-            in
-            { internal
-                | leftCal = newLeftCal
-                , rightCal = newRightCal
-                , today = today
             }
 
 
