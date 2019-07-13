@@ -1,6 +1,6 @@
 module DateRangePicker.Calendar exposing (fromPosix, view, weekdayNames)
 
-import DateRangePicker.Helpers as Helpers
+import DateRangePicker.Helpers as Helpers exposing (sameDay)
 import DateRangePicker.Range as Range
 import DateRangePicker.Step as Step exposing (Step)
 import Html exposing (..)
@@ -68,15 +68,15 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
 
                 Step.Begin begin ->
                     { base
-                        | active = Helpers.sameDay utc begin day
-                        , start = Helpers.sameDay utc begin day
+                        | active = sameDay utc begin day
+                        , start = sameDay utc begin day
                     }
 
                 Step.Complete range ->
                     { base
-                        | active = Helpers.sameDay utc range.begin day || Helpers.sameDay utc range.end day
-                        , start = Helpers.sameDay utc range.begin day
-                        , end = Helpers.sameDay utc range.end day
+                        | active = (range |> Range.beginsAt |> sameDay utc day) || (range |> Range.endsAt |> sameDay utc day)
+                        , start = range |> Range.beginsAt |> sameDay utc day
+                        , end = range |> Range.endsAt |> sameDay utc day
                         , inRange = Range.between range day
                     }
 
@@ -86,7 +86,7 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
     td
         ([ classList
             [ ( "EDRPCalendar__cell", True )
-            , ( "EDRPCalendar__cell--today", Helpers.sameDay utc day today )
+            , ( "EDRPCalendar__cell--today", sameDay utc day today )
             , ( "EDRPCalendar__cell--active", active )
             , ( "EDRPCalendar__cell--inRange", inRange )
             , ( "EDRPCalendar__cell--start", start )
