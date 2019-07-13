@@ -1,12 +1,12 @@
 $grey: rgb(155, 155, 155);
 
-:root { 
+:root {
     --edrp-background-color: #fff;
     --edrp-font-color: rgba(0, 0, 0, 0.8);
     --edrp-primary-color: rgb(82, 143, 255);
     --edrp-primary-color-alpha: rgba(82, 143, 255, 0.25);
     --edrp-border-color: lightgrey;
-} 
+}
 
 .EDRP {
     position: relative;
@@ -96,7 +96,7 @@ $grey: rgb(155, 155, 155);
                 background: rgba($grey, 0.3);
             }
 
-            &--active { 
+            &--active {
                 background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
                 color: #fff;
@@ -117,9 +117,10 @@ $grey: rgb(155, 155, 155);
                     background: var(--edrp-primary-color-alpha);
                 }
             }
-            
+
             &--end {
-                border-radius: 0 5px 5px 0;
+                border-bottom-right-radius: 5px;
+                border-top-right-radius: 5px;
                 background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
 
@@ -135,7 +136,8 @@ $grey: rgb(155, 155, 155);
             }
 
             &--start {
-                border-radius: 5px 0 0 5px;
+                border-bottom-left-radius: 5px;
+                border-top-left-radius: 5px;
                 background: rgb(82, 143, 255);
                 background: var(--edrp-primary-color);
 
