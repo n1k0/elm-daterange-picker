@@ -1,7 +1,7 @@
 module DateRangePicker exposing
     ( Config, defaultConfig, configure
     , State, init, now, nowTask, getRange, setRange, setToday, disable, isDisabled, open, isOpened
-    , view, panel
+    , view
     , subscriptions
     )
 
@@ -20,7 +20,7 @@ module DateRangePicker exposing
 
 # View
 
-@docs view, panel
+@docs view
 
 
 # Subscriptions
@@ -50,6 +50,7 @@ import Time.Extra as TE
   - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
+  - `sticky`: Make the picker always opened
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
 
 -}
@@ -59,6 +60,7 @@ type alias Config =
     , weekdayFormatter : Time.Weekday -> String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
+    , sticky : Bool
     , weeksStartOn : Time.Weekday
     }
 
@@ -70,6 +72,7 @@ type alias Config =
   - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
+  - `sticky`: `False`
   - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
 -}
@@ -80,6 +83,7 @@ defaultConfig =
     , weekdayFormatter = Helpers.weekdayToString
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
+    , sticky = False
     , weeksStartOn = Time.Mon
     }
 
@@ -220,10 +224,13 @@ isDisabled (State internal) =
 
 
 {-| Checks if the DateRangePicker is currently opened.
+
+Note: always returns `True` when the `sticky` option is enabled
+
 -}
 isOpened : State -> Bool
 isOpened (State internal) =
-    internal.opened
+    internal.config.sticky || internal.opened
 
 
 {-| Disable or enable a DateRangePicker.
@@ -234,10 +241,21 @@ disable disabled (State internal) =
 
 
 {-| Open or close a DateRangePicker.
+
+Note: inoperant when the `sticky` option is `True`.
+
 -}
 open : Bool -> State -> State
 open opened (State internal) =
-    State { internal | opened = opened }
+    State
+        { internal
+            | opened =
+                if internal.config.sticky then
+                    False
+
+                else
+                    opened
+        }
 
 
 getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
@@ -372,14 +390,6 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
         ]
 
 
-{-| A DateRangePicker panel view.
-
-The panel is the content of the window containing the ranges and the two calendars.
-This is useful when you don't need to deal with the clickable date input.
-
-Usage is similar to [`view`](#view).
-
--}
 panel : (State -> msg) -> State -> Html msg
 panel tagger (State internal) =
     let
@@ -393,7 +403,12 @@ panel tagger (State internal) =
                 )
     in
     div
-        [ class "EDRP__body", onMouseUp <| handleEvent tagger NoOp internal ]
+        [ classList
+            [ ( "EDRP__body", True )
+            , ( "EDRP__body--sticky", internal.config.sticky )
+            ]
+        , onMouseUp <| handleEvent tagger NoOp internal
+        ]
         [ predefinedRangesView tagger internal
         , Calendar.view
             { allowFuture = internal.config.allowFuture
@@ -434,12 +449,16 @@ panel tagger (State internal) =
                         range |> Range.format utc |> text
                 ]
             , div [ class "EDRPFoot__actions" ]
-                [ button
-                    [ class "EDRP__button"
-                    , type_ "button"
-                    , onClick <| handleEvent tagger Close internal
-                    ]
-                    [ text "Close" ]
+                [ if not internal.config.sticky then
+                    button
+                        [ class "EDRP__button"
+                        , type_ "button"
+                        , onClick <| handleEvent tagger Close internal
+                        ]
+                        [ text "Close" ]
+
+                  else
+                    text ""
                 , button
                     [ class "EDRP__button"
                     , type_ "button"
@@ -477,7 +496,7 @@ view tagger (State internal) =
             , readonly True
             ]
             []
-        , if internal.opened then
+        , if internal.config.sticky || internal.opened then
             panel tagger (State internal)
 
           else
@@ -490,7 +509,7 @@ panel to be closed when clicking outside of it.
 -}
 subscriptions : (State -> msg) -> State -> Sub msg
 subscriptions tagger (State internal) =
-    if internal.opened then
+    if internal.opened && not internal.config.sticky then
         BE.onMouseUp (Decode.succeed (update Close internal |> State |> tagger))
 
     else

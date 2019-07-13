@@ -24,7 +24,13 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    Picker.configure (\default -> { default | allowFuture = False })
+    Picker.configure
+        (\default ->
+            { default
+                | allowFuture = False
+                , noRangeCaption = "Click me!"
+            }
+        )
         |> initFromConfig
 
 
@@ -56,8 +62,9 @@ view { config, picker } =
             p [] [ label [] children ]
     in
     div []
-        [ h1 []
-            [ text "elm-daterange-picker" ]
+        [ h1 [] [ text "elm-daterange-picker" ]
+        , Picker.view PickerChanged picker
+        , h2 [] [ text "Live configuration" ]
         , p []
             [ text "Selected: "
             , case Picker.getRange picker of
@@ -96,6 +103,15 @@ view { config, picker } =
                     []
                 ]
             , field
+                [ input
+                    [ type_ "checkbox"
+                    , onCheck (\sticky -> UpdateConfig { config | sticky = sticky })
+                    , checked config.sticky
+                    ]
+                    []
+                , text " Sticky (always opened)"
+                ]
+            , field
                 [ text "Weeks start on "
                 , [ Time.Sat, Time.Sun, Time.Mon ]
                     |> List.map
@@ -109,10 +125,6 @@ view { config, picker } =
                     |> select [ onInput (\str -> UpdateConfig { config | weeksStartOn = dayFromString str }) ]
                 ]
             ]
-        , h2 [] [ text "As Form input" ]
-        , Picker.view PickerChanged picker
-        , h2 [] [ text "As Panel" ]
-        , Picker.panel PickerChanged picker
         ]
 
 
