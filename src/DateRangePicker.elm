@@ -423,6 +423,11 @@ panel tagger (State internal) =
             , weeksStartOn = internal.config.weeksStartOn
             }
 
+        allowNext =
+            internal.config.allowFuture
+                || (internal.rightCal |> TE.startOfMonth utc |> Time.posixToMillis)
+                < (internal.today |> TE.startOfMonth utc |> Time.posixToMillis)
+
         onMouseUp msg =
             custom "mouseup"
                 (Decode.succeed
@@ -442,15 +447,18 @@ panel tagger (State internal) =
         [ predefinedRangesView tagger internal
         , Calendar.view
             { baseCalendar
-                | next = Nothing
+                | target = internal.leftCal
                 , prev = Just (handleEvent tagger Prev internal)
-                , target = internal.leftCal
             }
         , Calendar.view
             { baseCalendar
-                | next = Just (handleEvent tagger Next internal)
-                , prev = Nothing
-                , target = internal.rightCal
+                | target = internal.rightCal
+                , next =
+                    if allowNext then
+                        Just (handleEvent tagger Next internal)
+
+                    else
+                        Nothing
             }
         , div [ class "EDRPFoot" ]
             [ span []

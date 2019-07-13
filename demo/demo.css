@@ -152,6 +152,10 @@
   outline: 1px dashed #9b9b9b;
 }
 
+.EDRPCalendar__head {
+  height: 36px;
+}
+
 .EDRPCalendar__nav {
   cursor: pointer;
   height: 15px;

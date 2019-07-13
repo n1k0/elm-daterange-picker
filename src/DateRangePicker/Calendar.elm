@@ -141,9 +141,9 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
     div [ class "EDRPCalendar" ]
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
-                [ tr []
+                [ tr [ class "EDRPCalendar__head" ]
                     [ navLink "EDRPCalendar__nav--prev" prev
-                    , th [ colspan 5 ]
+                    , th [ class "EDRPCalendar__month", colspan 5 ]
                         [ text (Helpers.shortMonth utc monthFormatter target) ]
                     , navLink "EDRPCalendar__nav--next" next
                     ]
