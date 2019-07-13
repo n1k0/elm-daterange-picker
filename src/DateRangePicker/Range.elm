@@ -44,7 +44,13 @@ type alias InternalRange =
     }
 
 
-{-| Creates a [`Range`](#Range).
+{-| Creates a [`Range`](#Range) from two Posix timestamps.
+
+Notes:
+
+  - args order is not important as it's internally managed.
+  - A Range is always treated as expressed in UTC.
+
 -}
 create : Posix -> Posix -> Range
 create begin end =
