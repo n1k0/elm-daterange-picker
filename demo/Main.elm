@@ -24,15 +24,18 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
+    Picker.configure (\default -> { default | allowFuture = False })
+        |> initFromConfig
+
+
+initFromConfig : Picker.Config -> ( Model, Cmd Msg )
+initFromConfig config =
     let
-        config =
-            Picker.configure (\default -> { default | allowFuture = False })
+        picker =
+            Picker.init config Nothing
     in
-    ( { config = config
-      , picker = Picker.init config Nothing (Time.millisToPosix 0)
-      }
-    , Picker.initToday config Nothing
-        |> Task.perform PickerChanged
+    ( { config = config, picker = picker }
+    , Picker.now PickerChanged picker
     )
 
 
@@ -43,18 +46,19 @@ update msg model =
             ( { model | picker = state }, Cmd.none )
 
         UpdateConfig config ->
-            ( model
-            , Picker.initToday config (Picker.getValue model.picker)
-                |> Task.perform PickerChanged
-            )
+            initFromConfig config
 
 
 view : Model -> Html Msg
 view { config, picker } =
+    let
+        field children =
+            p [] [ label [] children ]
+    in
     div []
         [ p []
             [ text "Selected: "
-            , case Picker.getValue picker of
+            , case Picker.getRange picker of
                 Just range ->
                     text (Range.format Time.utc range)
 
@@ -62,38 +66,31 @@ view { config, picker } =
                     text "nothing selected"
             ]
         , div []
-            [ p []
-                [ label []
-                    [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | allowFuture = allow }) ] []
-                    , text " Allow future"
-                    ]
+            [ field
+                [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | allowFuture = allow }) ] []
+                , text " Allow future"
                 ]
-            , p []
-                [ label []
-                    [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | applyRangeImmediately = allow }) ] []
-                    , text " Apply predefined range immediately"
-                    ]
+            , field
+                [ input [ type_ "checkbox", onCheck (\allow -> UpdateConfig { config | applyRangeImmediately = allow }) ] []
+                , text " Apply predefined range immediately"
                 ]
-            , p []
-                [ label []
-                    [ text "No range caption "
-                    , input [ type_ "text", onInput (\caption -> UpdateConfig { config | noRangeCaption = caption }) ] []
-                    ]
+            , field
+                [ text "No range caption "
+                , input [ type_ "text", onInput (\caption -> UpdateConfig { config | noRangeCaption = caption }) ] []
                 ]
-            , p []
-                [ label []
-                    [ text "Weeks start on "
-                    , [ Time.Sat, Time.Sun, Time.Mon ]
-                        |> List.map
-                            (\day ->
-                                option [ value (dayToString day), selected (day == config.weeksStartOn) ] [ text (dayToString day) ]
-                            )
-                        |> select [ onInput (\str -> UpdateConfig { config | weeksStartOn = dayFromString str }) ]
-                    ]
+            , field
+                [ text "Weeks start on "
+                , [ Time.Sat, Time.Sun, Time.Mon ]
+                    |> List.map
+                        (\day ->
+                            option [ value (dayToString day), selected (day == config.weeksStartOn) ] [ text (dayToString day) ]
+                        )
+                    |> select [ onInput (\str -> UpdateConfig { config | weeksStartOn = dayFromString str }) ]
                 ]
             ]
-
-        -- , Picker.view PickerChanged picker
+        , h2 [] [ text "As Form input" ]
+        , Picker.view PickerChanged picker
+        , h2 [] [ text "As Panel" ]
         , Picker.panel PickerChanged picker
         ]
 

@@ -1,6 +1,6 @@
 module DateRangePicker exposing
-    ( Config, configure, defaultConfig
-    , State, init, initToday, getValue, disable, isDisabled, open, isOpened, setRange
+    ( Config, defaultConfig, configure
+    , State, init, now, nowTask, getRange, setRange, setToday, disable, isDisabled, open, isOpened
     , view, panel
     , subscriptions
     )
@@ -10,12 +10,12 @@ module DateRangePicker exposing
 
 # Configuration
 
-@docs Config, configure, defaultConfig
+@docs Config, defaultConfig, configure
 
 
 # State
 
-@docs State, init, initToday, getValue, disable, isDisabled, open, isOpened, setRange
+@docs State, init, now, nowTask, getRange, setRange, setToday, disable, isDisabled, open, isOpened
 
 
 # View
@@ -126,20 +126,20 @@ type Msg
     | Prev
     | Pick Posix
     | Set Range
+    | Today Posix
 
 
-{-| Initializes a State with the current day represented as a Posix.
+{-| Initializes a State.
 
-    import Time
-
-    init defaultConfig Nothing (Time.millisToPosix 1562916362413)
+Note: this will position the calendar at Unix Epoch (Jan, 1st 1970 UTC). To
+position it to today's date, look at [`now`](#now)
 
 -}
-init : Config -> Maybe Range -> Posix -> State
-init config selected today =
+init : Config -> Maybe Range -> State
+init config selected =
     let
         ( leftCal, rightCal ) =
-            getCalendars config selected today
+            getCalendars config selected TE.epoch
     in
     State
         { config = config
@@ -149,66 +149,69 @@ init config selected today =
         , rightCal = rightCal
         , opened = False
         , step = Step.fromMaybe selected
-        , today = today
+        , today = TE.epoch
         }
 
 
-{-| A Task for fetching and initializing a State with today's date.
-
-    import DateRangePicker as Picker
-    import Task
-    import Time exposing (millisToPosix)
-
-    type alias Model =
-        { picker : Picker.State
-        }
-
-    type Msg
-        = PickerChanged Picker.State
+{-| A command for positioning the DateRangePicker at today's date.
 
     init : () -> ( Model, Cmd Msg )
     init _ =
-        ( { picker = Picker.init Nothing (millisToPosix 0) }
-        , initToday defaultConfig Nothing
-            |> Task.perform PickerChanged
-        )
-
-    update : Msg -> Model -> ( Model, Cmd Msg )
-    update msg model =
-        case msg of
-            PickerChanged state ->
-                { model | picker = state }
+        let
+            picker =
+                Picker.init Nothing
+        in
+        ( picker, Picker.now picker PickerChanged )
 
 -}
-initToday : Config -> Maybe Range -> Task Never State
-initToday config selected =
-    Time.now |> Task.andThen (init config selected >> Task.succeed)
+now : (State -> msg) -> State -> Cmd msg
+now tagger (State internal) =
+    Time.now
+        |> Task.andThen (\today -> update (Today today) internal |> State |> Task.succeed)
+        |> Task.perform tagger
 
 
-getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
-getCalendars config maybeRange today =
-    case ( config.allowFuture, maybeRange ) of
-        ( True, Just range ) ->
-            ( range |> Range.beginsAt |> TE.startOfMonth utc
-            , range |> Range.beginsAt |> Helpers.startOfNextMonth utc
-            )
-
-        ( False, Just range ) ->
-            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth utc
-            , range |> Range.endsAt |> TE.startOfMonth utc
-            )
-
-        ( _, Nothing ) ->
-            ( today |> Helpers.startOfPreviousMonth utc
-            , today |> TE.startOfMonth utc
-            )
+{-| A Task for initializing a State with a Range and today's date.
+-}
+nowTask : Config -> Maybe Range -> Task Never State
+nowTask config selected =
+    Time.now
+        |> Task.andThen (\today -> init config selected |> setToday today |> Task.succeed)
 
 
 {-| Get the current DateRangePicker.Range of the DateRangePicker, if any.
 -}
-getValue : State -> Maybe Range
-getValue (State internal) =
+getRange : State -> Maybe Range
+getRange (State internal) =
     internal.current
+
+
+{-| Assign a DateRangePicker.Range value to the DateRangePicker.
+
+    import DateRangePicker.Range as Range
+
+    state |> setRange (Range.create begin end)
+
+-}
+setRange : Maybe Range -> State -> State
+setRange dateRange (State internal) =
+    State { internal | current = dateRange, step = Step.fromMaybe dateRange }
+
+
+{-| Sets current DateRangePicker date.
+-}
+setToday : Posix -> State -> State
+setToday today (State internal) =
+    let
+        ( newLeftCal, newRightCal ) =
+            getCalendars internal.config internal.current today
+    in
+    State
+        { internal
+            | leftCal = newLeftCal
+            , rightCal = newRightCal
+            , today = today
+        }
 
 
 {-| Checks if the DateRangePicker is currently disabled.
@@ -239,16 +242,23 @@ open opened (State internal) =
     State { internal | opened = opened }
 
 
-{-| Assign a DateRangePicker.Range value to the DateRangePicker.
+getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
+getCalendars config maybeRange today =
+    case ( config.allowFuture, maybeRange ) of
+        ( True, Just range ) ->
+            ( range |> Range.beginsAt |> TE.startOfMonth utc
+            , range |> Range.beginsAt |> Helpers.startOfNextMonth utc
+            )
 
-    import DateRangePicker.Range as Range
+        ( False, Just range ) ->
+            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth utc
+            , range |> Range.endsAt |> TE.startOfMonth utc
+            )
 
-    state |> setRange (Range.create begin end)
-
--}
-setRange : Maybe Range -> State -> State
-setRange dateRange (State internal) =
-    State { internal | current = dateRange, step = Step.fromMaybe dateRange }
+        ( _, Nothing ) ->
+            ( today |> Helpers.startOfPreviousMonth utc
+            , today |> TE.startOfMonth utc
+            )
 
 
 update : Msg -> InternalState -> InternalState
@@ -312,6 +322,17 @@ update msg ({ leftCal, rightCal, step } as internal) =
                 | leftCal = newLeftCal
                 , rightCal = newRightCal
                 , step = Step.fromMaybe (Just dateRange)
+            }
+
+        Today today ->
+            let
+                ( newLeftCal, newRightCal ) =
+                    getCalendars internal.config internal.current today
+            in
+            { internal
+                | leftCal = newLeftCal
+                , rightCal = newRightCal
+                , today = today
             }
 
 
