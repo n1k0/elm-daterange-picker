@@ -188,14 +188,14 @@ initToday config selected =
 getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
 getCalendars config maybeRange today =
     case ( config.allowFuture, maybeRange ) of
-        ( True, Just { begin } ) ->
-            ( begin |> TE.startOfMonth utc
-            , begin |> Helpers.startOfNextMonth utc
+        ( True, Just range ) ->
+            ( range |> Range.beginsAt |> TE.startOfMonth utc
+            , range |> Range.beginsAt |> Helpers.startOfNextMonth utc
             )
 
-        ( False, Just { end } ) ->
-            ( end |> Helpers.startOfPreviousMonth utc
-            , end |> TE.startOfMonth utc
+        ( False, Just range ) ->
+            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth utc
+            , range |> Range.endsAt |> TE.startOfMonth utc
             )
 
         ( _, Nothing ) ->
@@ -241,9 +241,9 @@ open opened (State internal) =
 
 {-| Assign a DateRangePicker.Range value to the DateRangePicker.
 
-    import DateRangePicker.Range exposing (Range)
+    import DateRangePicker.Range as Range
 
-    state |> setRange (Range begin end)
+    state |> setRange (Range.create begin end)
 
 -}
 setRange : Maybe Range -> State -> State
@@ -327,34 +327,22 @@ defaultPredefinedRanges today =
             posix |> TE.addDays -n |> TE.startOfDay utc
     in
     [ ( "Today"
-      , { begin = TE.startOfDay utc today
-        , end = TE.endOfDay utc today
-        }
+      , Range.create (TE.startOfDay utc today) (TE.endOfDay utc today)
       )
     , ( "Yesterday"
-      , { begin = today |> daysBefore 1 |> TE.startOfDay utc
-        , end = today |> daysBefore 1 |> TE.endOfDay utc
-        }
+      , Range.create (today |> daysBefore 1 |> TE.startOfDay utc) (today |> daysBefore 1 |> TE.endOfDay utc)
       )
     , ( "Last 7 days"
-      , { begin = today |> daysBefore 7
-        , end = today |> TE.startOfDay utc |> TE.addMillis -1
-        }
+      , Range.create (today |> daysBefore 7) (today |> TE.startOfDay utc |> TE.addMillis -1)
       )
     , ( "Last 30 days"
-      , { begin = today |> daysBefore 30
-        , end = today |> TE.startOfDay utc |> TE.addMillis -1
-        }
+      , Range.create (today |> daysBefore 30) (today |> TE.startOfDay utc |> TE.addMillis -1)
       )
     , ( "This month"
-      , { begin = today |> TE.startOfMonth utc
-        , end = today
-        }
+      , Range.create (today |> TE.startOfMonth utc) today
       )
     , ( "Last month"
-      , { begin = today |> Helpers.startOfPreviousMonth utc
-        , end = today |> TE.startOfMonth utc |> TE.addMillis -1
-        }
+      , Range.create (today |> Helpers.startOfPreviousMonth utc) (today |> TE.startOfMonth utc |> TE.addMillis -1)
       )
     ]
 

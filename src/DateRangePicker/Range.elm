@@ -1,8 +1,25 @@
-module DateRangePicker.Range exposing (Range, between, days, decode, encode, format, fromString, toString)
+module DateRangePicker.Range exposing
+    ( Range, create, beginsAt, endsAt
+    , between, days, format
+    , decode, encode, fromString, toString, toTuple
+    )
 
 {-| Date range management.
 
-@docs Range, between, days, decode, encode, format, fromString, toString
+
+# Range
+
+@docs Range, create, beginsAt, endsAt
+
+
+# Helpers
+
+@docs between, days, format
+
+
+# Conversion
+
+@docs decode, encode, fromString, toString, toTuple
 
 -}
 
@@ -10,33 +27,62 @@ import DateRangePicker.Helpers as Helpers
 import Iso8601
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Time exposing (Posix)
+import Time exposing (Posix, posixToMillis)
 import Time.Extra as TE
 
 
 {-| A time range between two
-[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix),
-`begin` being inclusive and `end` exclusive.
+[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 -}
-type alias Range =
+type Range
+    = Range InternalRange
+
+
+type alias InternalRange =
     { begin : Posix
     , end : Posix
     }
+
+
+{-| Creates a [`Range`](#Range).
+-}
+create : Posix -> Posix -> Range
+create begin end =
+    case TE.compare begin end of
+        GT ->
+            Range { begin = end, end = begin }
+
+        _ ->
+            Range { begin = begin, end = end }
+
+
+{-| Retrieves the Posix the [`Range`](#Range) begins at.
+-}
+beginsAt : Range -> Posix
+beginsAt (Range { begin }) =
+    begin
+
+
+{-| Retrieves the Posix the [`Range`](#Range) ends at.
+-}
+endsAt : Range -> Posix
+endsAt (Range { end }) =
+    end
 
 
 {-| Checks if a [`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/TimePosix)
 is comprised within a [`Range`](#Range).
 -}
 between : Range -> Posix -> Bool
-between { begin, end } day =
-    Time.posixToMillis day >= Time.posixToMillis begin && Time.posixToMillis day < Time.posixToMillis end
+between (Range { begin, end }) day =
+    posixToMillis day >= posixToMillis begin && posixToMillis day < posixToMillis end
 
 
-{-| Computes the number of days in a [`Range`](#Range).
+{-| Computes the number of days in a [`Range`](#Range), floored.
 -}
 days : Range -> Int
-days { begin, end } =
-    (Time.posixToMillis end - Time.posixToMillis begin) // 1000 // 86400
+days (Range { begin, end }) =
+    (posixToMillis end - posixToMillis begin) // 1000 // 86400
 
 
 {-| Decodes a [`Range`](#Range) from JSON.
@@ -44,15 +90,16 @@ days { begin, end } =
 decode : Decoder Range
 decode =
     -- Note: date ranges received from the datepicker are expressed in UTC
-    Decode.map2 Range
+    Decode.map2 InternalRange
         (Decode.field "begin" Iso8601.decoder)
         (Decode.field "end" Iso8601.decoder)
+        |> Decode.andThen (Range >> Decode.succeed)
 
 
 {-| Encodes a [`Range`](#Range) to JSON.
 -}
 encode : Range -> Encode.Value
-encode { begin, end } =
+encode (Range { begin, end }) =
     Encode.object
         [ ( "begin", Iso8601.encode begin )
         , ( "end", end |> TE.endOfDay Time.utc |> Iso8601.encode )
@@ -62,7 +109,7 @@ encode { begin, end } =
 {-| Formats a [`Range`](#Range) in simple fashion.
 -}
 format : Time.Zone -> Range -> String
-format zone { begin, end } =
+format zone (Range { begin, end }) =
     if Helpers.sameDay zone begin end then
         "on " ++ Helpers.formatDate zone begin
 
@@ -77,7 +124,7 @@ fromString : String -> Maybe Range
 fromString str =
     case str |> String.split ";" |> List.map Iso8601.toTime of
         [ Ok begin, Ok end ] ->
-            Just { begin = begin, end = end }
+            Just (Range { begin = begin, end = end })
 
         _ ->
             Nothing
@@ -87,5 +134,12 @@ fromString str =
 encoded as UTC to Iso8601 format and joined with a `;` character.
 -}
 toString : Range -> String
-toString { begin, end } =
+toString (Range { begin, end }) =
     Iso8601.fromTime begin ++ ";" ++ Iso8601.fromTime end
+
+
+{-| Converts a [`Range`](#Range) into a Tuple.
+-}
+toTuple : Range -> ( Posix, Posix )
+toTuple (Range { begin, end }) =
+    ( begin, end )
