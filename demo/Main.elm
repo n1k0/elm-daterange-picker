@@ -24,21 +24,23 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    Picker.configure
-        (\default ->
-            { default
-                | allowFuture = False
-                , noRangeCaption = "Click me!"
-            }
+    initFromConfig
+        (Picker.configure
+            (\default ->
+                { default
+                    | allowFuture = False
+                    , noRangeCaption = "Click me!"
+                }
+            )
         )
-        |> initFromConfig
+        Nothing
 
 
-initFromConfig : Picker.Config -> ( Model, Cmd Msg )
-initFromConfig config =
+initFromConfig : Picker.Config -> Maybe Range -> ( Model, Cmd Msg )
+initFromConfig config range =
     let
         picker =
-            Picker.init config Nothing
+            Picker.init config range
     in
     ( { config = config, picker = picker }
     , Picker.now PickerChanged picker
@@ -52,7 +54,9 @@ update msg model =
             ( { model | picker = state }, Cmd.none )
 
         UpdateConfig config ->
-            initFromConfig config
+            model.picker
+                |> Picker.getRange
+                |> initFromConfig config
 
 
 view : Model -> Html Msg
