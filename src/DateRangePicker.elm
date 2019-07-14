@@ -5,7 +5,36 @@ module DateRangePicker exposing
     , subscriptions
     )
 
-{-| A configurable date range picker widget.
+{-| A date range picker widget.
+
+    import DateRangePicker as Picker
+    import Html exposing (Html)
+
+    type alias Model =
+        { picker : Picker.State }
+
+    type Msg
+        = PickerChanged Picker.State
+
+    init : ( Model, Cmd Msg )
+    init =
+        let
+            picker =
+                Picker.init Picker.defaultConfig Nothing
+        in
+        ( { picker = picker }
+        , Picker.now PickerChanged picker
+        )
+
+    update : Msg -> Model -> ( Model, Cmd Msg )
+    update msg model =
+        case msg of
+            PickerChanged state ->
+                { model | picker = state }
+
+    view : Model -> Html Msg
+    view model =
+        Picker.view PickerChanged model.picker
 
 
 # Configuration
@@ -67,7 +96,7 @@ type alias Config =
     }
 
 
-{-| A Config featuring the following default values:
+{-| A [`Config`](#Config) featuring the following default values:
 
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
@@ -138,11 +167,11 @@ type Msg
     | Set Range
 
 
-{-| Initializes a State from a [`Config`](#Config) and a preselected
+{-| Initializes a State from a [`Config`](#Config) and an initial
 [`Range`](./DateRangePicker-Range#Range).
 
 Note: this will position the calendar at Unix Epoch (Jan, 1st 1970 UTC). To
-position it to today's date, look at [`now`](#now)
+position it at today's date, look at [`now`](#now) and [`nowTask`](#nowTask).
 
 -}
 init : Config -> Maybe Range -> State
@@ -164,16 +193,7 @@ init config selected =
         }
 
 
-{-| A command for positioning the DateRangePicker at today's date.
-
-    init : () -> ( Model, Cmd Msg )
-    init _ =
-        let
-            picker =
-                Picker.init Nothing
-        in
-        ( picker, Picker.now picker PickerChanged )
-
+{-| A command for positioning a [`State`](#State) at today's date.
 -}
 now : (State -> msg) -> State -> Cmd msg
 now toMsg (State internal) =
@@ -181,8 +201,8 @@ now toMsg (State internal) =
         |> Task.perform toMsg
 
 
-{-| A Task for initializing a State with a [`Range`](./DateRangePicker-Range#Range)
-and today's date.
+{-| A Task for initializing a [`State`](#State) with an initial
+[`Range`](./DateRangePicker-Range#Range) at today's date.
 -}
 nowTask : Config -> Maybe Range -> Task Never State
 nowTask config selected =
@@ -190,26 +210,21 @@ nowTask config selected =
         |> Task.andThen (\today -> init config selected |> setToday today |> Task.succeed)
 
 
-{-| Get the current [`Range`](./DateRangePicker-Range#Range) of the DateRangePicker, if any.
+{-| Get the current [`Range`](./DateRangePicker-Range#Range) from a [`State`](#State), if any.
 -}
 getRange : State -> Maybe Range
-getRange (State internal) =
-    internal.current
+getRange (State { current }) =
+    current
 
 
 {-| Assign a selected [`Range`](./DateRangePicker-Range#Range) to the DateRangePicker.
-
-    import DateRangePicker.Range as Range
-
-    state |> setRange (Range.create begin end)
-
 -}
 setRange : Maybe Range -> State -> State
 setRange dateRange (State internal) =
     State { internal | current = dateRange, step = Step.fromMaybe dateRange }
 
 
-{-| Sets current DateRangePicker date.
+{-| Positions a date range picker [`State`](#State) to current date.
 -}
 setToday : Posix -> State -> State
 setToday today (State internal) =
@@ -225,31 +240,31 @@ setToday today (State internal) =
         }
 
 
-{-| Checks if the DateRangePicker is currently disabled.
+{-| Checks if the date range picker [`State`](#State) is currently disabled.
 -}
 isDisabled : State -> Bool
-isDisabled (State internal) =
-    internal.disabled
+isDisabled (State { disabled }) =
+    disabled
 
 
-{-| Checks if the DateRangePicker is currently opened.
+{-| Checks if the date range picker [`State`](#State) is currently opened.
 
-Note: always returns `True` when the `sticky` option is enabled
+Note: always returns `True` when the `sticky` config option is enabled.
 
 -}
 isOpened : State -> Bool
-isOpened (State internal) =
-    internal.config.sticky || internal.opened
+isOpened (State { config, opened }) =
+    config.sticky || opened
 
 
-{-| Disable or enable a DateRangePicker.
+{-| Disable or enable a date range picker [`State`](#State).
 -}
 disable : Bool -> State -> State
 disable disabled (State internal) =
     State { internal | disabled = disabled }
 
 
-{-| Open or close a DateRangePicker.
+{-| Open or close a date range picker [`State`](#State).
 
 Note: inoperant when the `sticky` option is `True`.
 
@@ -509,7 +524,26 @@ panel toMsg (State internal) =
 
 {-| The main DateRangePicker view.
 
-The first argument...
+The first argument is tipycally one of your application `Msg`, which will receive
+a new [`State`](#State) each time it's changed:
+
+    import DateRangePicker as Picker
+
+    type alias Model =
+        { picker : Picker.State }
+
+    type Msg
+        = PickerChanged Picker.State
+
+    update : Msg -> Model -> ( Model, Cmd Msg )
+    update msg model =
+        case msg of
+            PickerChanged state ->
+                { model | picker = state }
+
+    view : Model -> Html Msg
+    view model =
+        Picker.view PickerChanged model.picker
 
 -}
 view : (State -> msg) -> State -> Html msg
@@ -534,7 +568,7 @@ view toMsg (State internal) =
         ]
 
 
-{-| DateRangePicker subscriptions. They're useful if you want an opened DateRangePicker
+{-| DateRangePicker subscriptions. They're useful if you want an opened date range picker
 panel to be closed when clicking outside of it.
 -}
 subscriptions : (State -> msg) -> State -> Sub msg
