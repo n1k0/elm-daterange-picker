@@ -351,7 +351,15 @@ update msg ({ leftCal, rightCal, step } as internal) =
             internal
 
         Open ->
-            { internal | opened = True }
+            let
+                ( newLeftCal, newRightCal ) =
+                    getCalendars internal.config internal.current internal.today
+            in
+            { internal
+                | opened = True
+                , leftCal = newLeftCal
+                , rightCal = newRightCal
+            }
 
         Pick picked ->
             { internal | step = step |> Step.next picked }
