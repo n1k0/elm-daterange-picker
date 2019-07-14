@@ -512,7 +512,7 @@ view tagger (State internal) =
         [ input
             [ type_ "text"
             , HA.disabled internal.disabled
-            , Step.toMaybe internal.step
+            , internal.current
                 |> Maybe.map (Range.format utc)
                 |> Maybe.withDefault internal.config.noRangeCaption
                 |> value
