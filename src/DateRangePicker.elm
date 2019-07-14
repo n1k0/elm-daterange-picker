@@ -50,6 +50,7 @@ import Time.Extra as TE
   - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
+  - `predefinedRanges`: Generates custom predefined ranges.
   - `sticky`: Make the picker always opened
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
 
@@ -60,6 +61,7 @@ type alias Config =
     , weekdayFormatter : Time.Weekday -> String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
+    , predefinedRanges : Posix -> List ( String, Range )
     , sticky : Bool
     , weeksStartOn : Time.Weekday
     }
@@ -72,6 +74,7 @@ type alias Config =
   - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
+  - `predefinedRanges`: `"Today"`, `"Yesterday"`, `"Last 7 days"`, `"Last 30 days"`, `"This month"` and `"Last month"`
   - `sticky`: `False`
   - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
@@ -83,6 +86,7 @@ defaultConfig =
     , weekdayFormatter = Helpers.weekdayToString
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
+    , predefinedRanges = defaultPredefinedRanges
     , sticky = False
     , weeksStartOn = Time.Mon
     }
@@ -134,7 +138,8 @@ type Msg
     | Set Range
 
 
-{-| Initializes a State.
+{-| Initializes a State from a [`Config`](#Config) and a preselected
+[`Range`](./DateRangePicker-Range#Range).
 
 Note: this will position the calendar at Unix Epoch (Jan, 1st 1970 UTC). To
 position it to today's date, look at [`now`](#now)
@@ -176,7 +181,8 @@ now tagger (State internal) =
         |> Task.perform tagger
 
 
-{-| A Task for initializing a State with a Range and today's date.
+{-| A Task for initializing a State with a [`Range`](./DateRangePicker-Range#Range)
+and today's date.
 -}
 nowTask : Config -> Maybe Range -> Task Never State
 nowTask config selected =
@@ -184,14 +190,14 @@ nowTask config selected =
         |> Task.andThen (\today -> init config selected |> setToday today |> Task.succeed)
 
 
-{-| Get the current DateRangePicker.Range of the DateRangePicker, if any.
+{-| Get the current [`Range`](./DateRangePicker-Range#Range) of the DateRangePicker, if any.
 -}
 getRange : State -> Maybe Range
 getRange (State internal) =
     internal.current
 
 
-{-| Assign a DateRangePicker.Range value to the DateRangePicker.
+{-| Assign a selected [`Range`](./DateRangePicker-Range#Range) to the DateRangePicker.
 
     import DateRangePicker.Range as Range
 
@@ -398,7 +404,7 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
     in
     div [ class "EDRPPresets" ]
         [ today
-            |> defaultPredefinedRanges
+            |> internal.config.predefinedRanges
             |> List.map entry
             |> ul [ class "EDRPPresets__list" ]
         ]
@@ -502,9 +508,6 @@ panel tagger (State internal) =
 
 
 {-| The main DateRangePicker view.
-
-If you only need the panel content, have a look at [`panel`](#panel).
-
 -}
 view : (State -> msg) -> State -> Html msg
 view tagger (State internal) =
