@@ -156,6 +156,18 @@ rangeTests =
                 |> Expect.equal "from 2018-01-01 to 2018-01-08"
                 |> asTest "should format a multiple days period date range"
             ]
+        , describe "fromString"
+            [ "2018-01-01T00:00:00.000Z;2018-01-08T23:59:59.999Z"
+                |> Range.fromString
+                |> Expect.equal (Just sampleRange)
+                |> asTest "should import a range from a String"
+            ]
+        , describe "toString"
+            [ sampleRange
+                |> Range.toString
+                |> Expect.equal "2018-01-01T00:00:00.000Z;2018-01-08T23:59:59.999Z"
+                |> asTest "should transform a range to a String"
+            ]
         , describe "days"
             [ Range.days sampleRange
                 |> Expect.equal 7

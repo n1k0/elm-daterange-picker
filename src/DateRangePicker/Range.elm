@@ -59,7 +59,7 @@ create begin end =
             Range { begin = end, end = begin }
 
         _ ->
-            Range { begin = begin, end = end }
+            Range { begin = begin, end = end |> TE.endOfDay Time.utc }
 
 
 {-| Retrieves the Posix the [`Range`](#Range) begins at.
@@ -108,7 +108,7 @@ encode : Range -> Encode.Value
 encode (Range { begin, end }) =
     Encode.object
         [ ( "begin", Iso8601.encode begin )
-        , ( "end", end |> TE.endOfDay Time.utc |> Iso8601.encode )
+        , ( "end", end |> Iso8601.encode )
         ]
 
 
@@ -141,7 +141,7 @@ encoded as UTC to Iso8601 format and joined with a `;` character.
 -}
 toString : Range -> String
 toString (Range { begin, end }) =
-    Iso8601.fromTime begin ++ ";" ++ Iso8601.fromTime end
+    Iso8601.fromTime begin ++ ";" ++ (end |> Iso8601.fromTime)
 
 
 {-| Converts a [`Range`](#Range) into a Tuple.
