@@ -7,7 +7,7 @@
     "build-demo": "npm run sass-build && elm make demo/Main.elm --output=demo/app.js",
     "deploy": "npm run build-demo && gh-pages -m \"Publish demo [ci skip]\" -d demo",
     "test": "elm-test",
-    "sass-build": "node-sass-chokidar style/ -o demo --output-style compressed --include-path node_modules/",
+    "sass-build": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/",
     "sass-watch": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/ -w",
     "start": "elm-live demo/Main.elm -e node_modules/.bin/elm -p 3000 -d demo/ -- --output=demo/app.js"
   },
