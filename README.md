@@ -1,7 +1,7 @@
 elm-daterange-picker
 ====================
 
-A date range picker written in [Elm](https://elm-lang.org/).
+A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://allo-media.github.io/elm-daterange-picker/)).
 
 ## How is this useful?
 
