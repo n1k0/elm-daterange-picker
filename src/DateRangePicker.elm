@@ -305,8 +305,14 @@ update : Msg -> InternalState -> InternalState
 update msg ({ leftCal, rightCal, step } as internal) =
     case msg of
         Apply dateRange ->
+            let
+                ( newLeftCal, newRightCal ) =
+                    getCalendars internal.config dateRange internal.today
+            in
             { internal
                 | opened = False
+                , leftCal = newLeftCal
+                , rightCal = newRightCal
                 , current = dateRange
                 , step = Step.fromMaybe dateRange
             }
