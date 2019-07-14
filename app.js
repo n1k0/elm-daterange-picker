@@ -7393,7 +7393,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$view = F2(
 								A2(
 									elm$core$Maybe$map,
 									allo_media$elm_daterange_picker$DateRangePicker$Range$format(elm$time$Time$utc),
-									allo_media$elm_daterange_picker$DateRangePicker$Step$toMaybe(internal.step)))),
+									internal.current))),
 							elm$html$Html$Events$onClick(
 							A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Open, internal)),
 							elm$html$Html$Attributes$readonly(true)
