@@ -176,9 +176,9 @@ init config selected =
 
 -}
 now : (State -> msg) -> State -> Cmd msg
-now tagger (State internal) =
+now toMsg (State internal) =
     nowTask internal.config internal.current
-        |> Task.perform tagger
+        |> Task.perform toMsg
 
 
 {-| A Task for initializing a State with a [`Range`](./DateRangePicker-Range#Range)
@@ -354,8 +354,8 @@ update msg ({ leftCal, rightCal, step } as internal) =
 
 
 handleEvent : (State -> msg) -> Msg -> InternalState -> msg
-handleEvent tagger msg =
-    update msg >> State >> tagger
+handleEvent toMsg msg =
+    update msg >> State >> toMsg
 
 
 defaultPredefinedRanges : Posix -> List ( String, Range )
@@ -386,7 +386,7 @@ defaultPredefinedRanges today =
 
 
 predefinedRangesView : (State -> msg) -> InternalState -> Html msg
-predefinedRangesView tagger ({ config, step, today } as internal) =
+predefinedRangesView toMsg ({ config, step, today } as internal) =
     let
         entry ( name, range ) =
             li
@@ -395,10 +395,10 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
                     , ( "EDRPPresets__label--active", Step.toMaybe step == Just range )
                     ]
                 , if config.applyRangeImmediately then
-                    onClick <| handleEvent tagger (Apply (Just range)) internal
+                    onClick <| handleEvent toMsg (Apply (Just range)) internal
 
                   else
-                    onClick <| handleEvent tagger (Set range) internal
+                    onClick <| handleEvent toMsg (Set range) internal
                 ]
                 [ text name ]
     in
@@ -411,16 +411,16 @@ predefinedRangesView tagger ({ config, step, today } as internal) =
 
 
 panel : (State -> msg) -> State -> Html msg
-panel tagger (State internal) =
+panel toMsg (State internal) =
     let
         baseCalendar =
             { allowFuture = internal.config.allowFuture
-            , hover = \posix -> handleEvent tagger (Hover posix) internal
+            , hover = \posix -> handleEvent toMsg (Hover posix) internal
             , hovered = internal.hovered
             , monthFormatter = internal.config.monthFormatter
             , next = Nothing
-            , noOp = handleEvent tagger NoOp internal
-            , pick = \posix -> handleEvent tagger (Pick posix) internal
+            , noOp = handleEvent toMsg NoOp internal
+            , pick = \posix -> handleEvent toMsg (Pick posix) internal
             , prev = Nothing
             , step = internal.step
             , target = internal.today
@@ -448,20 +448,20 @@ panel tagger (State internal) =
             [ ( "EDRP__body", True )
             , ( "EDRP__body--sticky", internal.config.sticky )
             ]
-        , onMouseUp <| handleEvent tagger NoOp internal
+        , onMouseUp <| handleEvent toMsg NoOp internal
         ]
-        [ predefinedRangesView tagger internal
+        [ predefinedRangesView toMsg internal
         , Calendar.view
             { baseCalendar
                 | target = internal.leftCal
-                , prev = Just (handleEvent tagger Prev internal)
+                , prev = Just (handleEvent toMsg Prev internal)
             }
         , Calendar.view
             { baseCalendar
                 | target = internal.rightCal
                 , next =
                     if allowNext then
-                        Just (handleEvent tagger Next internal)
+                        Just (handleEvent toMsg Next internal)
 
                     else
                         Nothing
@@ -483,7 +483,7 @@ panel tagger (State internal) =
                     button
                         [ class "EDRP__button"
                         , type_ "button"
-                        , onClick <| handleEvent tagger Close internal
+                        , onClick <| handleEvent toMsg Close internal
                         ]
                         [ text "Close" ]
 
@@ -493,13 +493,13 @@ panel tagger (State internal) =
                     [ class "EDRP__button"
                     , type_ "button"
                     , HA.disabled (internal.step == Step.Initial)
-                    , onClick <| handleEvent tagger Clear internal
+                    , onClick <| handleEvent toMsg Clear internal
                     ]
                     [ text "Clear" ]
                 , button
                     [ class "EDRP__button EDRP__button--primary"
                     , type_ "button"
-                    , onClick <| handleEvent tagger (Apply (Step.toMaybe internal.step)) internal
+                    , onClick <| handleEvent toMsg (Apply (Step.toMaybe internal.step)) internal
                     ]
                     [ text "Apply" ]
                 ]
@@ -508,9 +508,12 @@ panel tagger (State internal) =
 
 
 {-| The main DateRangePicker view.
+
+The first argument...
+
 -}
 view : (State -> msg) -> State -> Html msg
-view tagger (State internal) =
+view toMsg (State internal) =
     div [ class "EDRP" ]
         [ input
             [ type_ "text"
@@ -519,12 +522,12 @@ view tagger (State internal) =
                 |> Maybe.map (Range.format utc)
                 |> Maybe.withDefault internal.config.noRangeCaption
                 |> value
-            , onClick <| handleEvent tagger Open internal
+            , onClick <| handleEvent toMsg Open internal
             , readonly True
             ]
             []
         , if internal.config.sticky || internal.opened then
-            panel tagger (State internal)
+            panel toMsg (State internal)
 
           else
             text ""
@@ -535,9 +538,9 @@ view tagger (State internal) =
 panel to be closed when clicking outside of it.
 -}
 subscriptions : (State -> msg) -> State -> Sub msg
-subscriptions tagger (State internal) =
+subscriptions toMsg (State internal) =
     if internal.opened && not internal.config.sticky then
-        BE.onMouseUp (Decode.succeed (update Close internal |> State |> tagger))
+        BE.onMouseUp (Decode.succeed (handleEvent toMsg Close internal))
 
     else
         Sub.none
