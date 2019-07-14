@@ -21,6 +21,11 @@
   border-radius: 5px;
 }
 
+.EDRP__body--sticky {
+  position: relative;
+  width: 670px;
+}
+
 .EDRP__button {
   border: 0;
   text-transform: uppercase;

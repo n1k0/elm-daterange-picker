@@ -20,6 +20,11 @@ $grey: rgb(155, 155, 155);
         background: var(--edrp-background-color);
         border: 1px solid var(--edrp-border-color);
         border-radius: 5px;
+
+        &--sticky {
+          position: relative;
+          width: 670px;
+        }
     }
 
     &__button {
