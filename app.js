@@ -5538,6 +5538,22 @@ var waratuman$time_extra$Time$Extra$compare = F2(
 			elm$time$Time$posixToMillis(a),
 			elm$time$Time$posixToMillis(b));
 	});
+var waratuman$time_extra$Time$Extra$endOfDay = F2(
+	function (z, d) {
+		return A3(
+			waratuman$time_extra$Time$Extra$setMillis,
+			z,
+			999,
+			A3(
+				waratuman$time_extra$Time$Extra$setSecond,
+				z,
+				59,
+				A3(
+					waratuman$time_extra$Time$Extra$setMinute,
+					z,
+					59,
+					A3(waratuman$time_extra$Time$Extra$setHour, z, 23, d))));
+	});
 var allo_media$elm_daterange_picker$DateRangePicker$Range$create = F2(
 	function (begin, end) {
 		var _n0 = A2(waratuman$time_extra$Time$Extra$compare, begin, end);
@@ -5546,7 +5562,10 @@ var allo_media$elm_daterange_picker$DateRangePicker$Range$create = F2(
 				{begin: end, end: begin});
 		} else {
 			return allo_media$elm_daterange_picker$DateRangePicker$Range$Range(
-				{begin: begin, end: end});
+				{
+					begin: begin,
+					end: A2(waratuman$time_extra$Time$Extra$endOfDay, elm$time$Time$utc, end)
+				});
 		}
 	});
 var allo_media$elm_daterange_picker$DateRangePicker$Step$Begin = function (a) {
@@ -6291,22 +6310,6 @@ var waratuman$time_extra$Time$Extra$addDays = function (d) {
 			elm$core$Basics$add(d * 86400000),
 			elm$time$Time$millisToPosix));
 };
-var waratuman$time_extra$Time$Extra$endOfDay = F2(
-	function (z, d) {
-		return A3(
-			waratuman$time_extra$Time$Extra$setMillis,
-			z,
-			999,
-			A3(
-				waratuman$time_extra$Time$Extra$setSecond,
-				z,
-				59,
-				A3(
-					waratuman$time_extra$Time$Extra$setMinute,
-					z,
-					59,
-					A3(waratuman$time_extra$Time$Extra$setHour, z, 23, d))));
-	});
 var waratuman$time_extra$Time$Extra$startOfDay = F2(
 	function (z, d) {
 		return A3(
@@ -7402,6 +7405,100 @@ var allo_media$elm_daterange_picker$DateRangePicker$view = F2(
 					allo_media$elm_daterange_picker$DateRangePicker$State(internal)) : elm$html$Html$text('')
 				]));
 	});
+var elm$json$Json$Encode$object = function (pairs) {
+	return _Json_wrap(
+		A3(
+			elm$core$List$foldl,
+			F2(
+				function (_n0, obj) {
+					var k = _n0.a;
+					var v = _n0.b;
+					return A3(_Json_addField, k, v, obj);
+				}),
+			_Json_emptyObject(_Utils_Tuple0),
+			pairs));
+};
+var rtfeldman$elm_iso8601_date_strings$Iso8601$fromMonth = function (month) {
+	switch (month.$) {
+		case 'Jan':
+			return 1;
+		case 'Feb':
+			return 2;
+		case 'Mar':
+			return 3;
+		case 'Apr':
+			return 4;
+		case 'May':
+			return 5;
+		case 'Jun':
+			return 6;
+		case 'Jul':
+			return 7;
+		case 'Aug':
+			return 8;
+		case 'Sep':
+			return 9;
+		case 'Oct':
+			return 10;
+		case 'Nov':
+			return 11;
+		default:
+			return 12;
+	}
+};
+var rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString = F2(
+	function (digits, time) {
+		return A3(
+			elm$core$String$padLeft,
+			digits,
+			_Utils_chr('0'),
+			elm$core$String$fromInt(time));
+	});
+var rtfeldman$elm_iso8601_date_strings$Iso8601$fromTime = function (time) {
+	return A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		4,
+		A2(elm$time$Time$toYear, elm$time$Time$utc, time)) + ('-' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		2,
+		rtfeldman$elm_iso8601_date_strings$Iso8601$fromMonth(
+			A2(elm$time$Time$toMonth, elm$time$Time$utc, time))) + ('-' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		2,
+		A2(elm$time$Time$toDay, elm$time$Time$utc, time)) + ('T' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		2,
+		A2(elm$time$Time$toHour, elm$time$Time$utc, time)) + (':' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		2,
+		A2(elm$time$Time$toMinute, elm$time$Time$utc, time)) + (':' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		2,
+		A2(elm$time$Time$toSecond, elm$time$Time$utc, time)) + ('.' + (A2(
+		rtfeldman$elm_iso8601_date_strings$Iso8601$toPaddedString,
+		3,
+		A2(elm$time$Time$toMillis, elm$time$Time$utc, time)) + 'Z'))))))))))));
+};
+var rtfeldman$elm_iso8601_date_strings$Iso8601$encode = A2(elm$core$Basics$composeR, rtfeldman$elm_iso8601_date_strings$Iso8601$fromTime, elm$json$Json$Encode$string);
+var allo_media$elm_daterange_picker$DateRangePicker$Range$encode = function (_n0) {
+	var begin = _n0.a.begin;
+	var end = _n0.a.end;
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'begin',
+				rtfeldman$elm_iso8601_date_strings$Iso8601$encode(begin)),
+				_Utils_Tuple2(
+				'end',
+				rtfeldman$elm_iso8601_date_strings$Iso8601$encode(end))
+			]));
+};
+var allo_media$elm_daterange_picker$DateRangePicker$Range$toString = function (_n0) {
+	var begin = _n0.a.begin;
+	var end = _n0.a.end;
+	return rtfeldman$elm_iso8601_date_strings$Iso8601$fromTime(begin) + (';' + rtfeldman$elm_iso8601_date_strings$Iso8601$fromTime(end));
+};
 var allo_media$elm_daterange_picker$Main$UpdateConfig = function (a) {
 	return {$: 'UpdateConfig', a: a};
 };
@@ -7441,11 +7538,16 @@ var allo_media$elm_daterange_picker$Main$dayToString = function (day) {
 			return 'Saturday';
 	}
 };
+var elm$html$Html$code = _VirtualDom_node('code');
+var elm$html$Html$dd = _VirtualDom_node('dd');
+var elm$html$Html$dl = _VirtualDom_node('dl');
+var elm$html$Html$dt = _VirtualDom_node('dt');
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$html$Html$h2 = _VirtualDom_node('h2');
 var elm$html$Html$label = _VirtualDom_node('label');
 var elm$html$Html$option = _VirtualDom_node('option');
 var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$pre = _VirtualDom_node('pre');
 var elm$html$Html$select = _VirtualDom_node('select');
 var elm$html$Html$Attributes$checked = elm$html$Html$Attributes$boolProperty('checked');
 var elm$html$Html$Attributes$selected = elm$html$Html$Attributes$boolProperty('selected');
@@ -7527,19 +7629,88 @@ var allo_media$elm_daterange_picker$Main$view = function (_n0) {
 						elm$html$Html$text('Live configuration')
 					])),
 				A2(
-				elm$html$Html$p,
+				elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$text('Selected: '),
 						function () {
 						var _n1 = allo_media$elm_daterange_picker$DateRangePicker$getRange(picker);
 						if (_n1.$ === 'Just') {
 							var range = _n1.a;
-							return elm$html$Html$text(
-								A2(allo_media$elm_daterange_picker$DateRangePicker$Range$format, elm$time$Time$utc, range));
+							return A2(
+								elm$html$Html$dl,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$dt,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('Selected: ')
+											])),
+										A2(
+										elm$html$Html$dd,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text(
+												A2(allo_media$elm_daterange_picker$DateRangePicker$Range$format, elm$time$Time$utc, range))
+											])),
+										A2(
+										elm$html$Html$dt,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('toString: ')
+											])),
+										A2(
+										elm$html$Html$dd,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$code,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(
+														allo_media$elm_daterange_picker$DateRangePicker$Range$toString(range))
+													]))
+											])),
+										A2(
+										elm$html$Html$dt,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('JSON: ')
+											])),
+										A2(
+										elm$html$Html$dd,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$pre,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text(
+														A2(
+															elm$json$Json$Encode$encode,
+															2,
+															allo_media$elm_daterange_picker$DateRangePicker$Range$encode(range)))
+													]))
+											]))
+									]));
 						} else {
-							return elm$html$Html$text('nothing selected');
+							return A2(
+								elm$html$Html$p,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Nothing selected yet')
+									]));
 						}
 					}()
 					])),

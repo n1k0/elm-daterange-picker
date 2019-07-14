@@ -7,6 +7,7 @@ import DateRangePicker.Range as Range exposing (Range)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Json.Encode as Encode
 import Task exposing (Task)
 import Time
 
@@ -69,14 +70,20 @@ view { config, picker } =
         [ h1 [] [ text "elm-daterange-picker" ]
         , Picker.view PickerChanged picker
         , h2 [] [ text "Live configuration" ]
-        , p []
-            [ text "Selected: "
-            , case Picker.getRange picker of
+        , div []
+            [ case Picker.getRange picker of
                 Just range ->
-                    text (Range.format Time.utc range)
+                    dl []
+                        [ dt [] [ text "Selected: " ]
+                        , dd [] [ text (Range.format Time.utc range) ]
+                        , dt [] [ text "toString: " ]
+                        , dd [] [ code [] [ text (Range.toString range) ] ]
+                        , dt [] [ text "JSON: " ]
+                        , dd [] [ pre [] [ Range.encode range |> Encode.encode 2 |> text ] ]
+                        ]
 
                 Nothing ->
-                    text "nothing selected"
+                    p [] [ text "Nothing selected yet" ]
             ]
         , div []
             [ field
