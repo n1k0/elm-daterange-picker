@@ -4393,67 +4393,14 @@ var _Bitwise_shiftRightZfBy = F2(function(offset, a)
 {
 	return a >>> offset;
 });
-var allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString = function (month) {
-	switch (month.$) {
-		case 'Jan':
-			return 'Jan';
-		case 'Feb':
-			return 'Feb';
-		case 'Mar':
-			return 'Mar';
-		case 'Apr':
-			return 'Apr';
-		case 'May':
-			return 'May';
-		case 'Jun':
-			return 'Jun';
-		case 'Jul':
-			return 'Jul';
-		case 'Aug':
-			return 'Aug';
-		case 'Sep':
-			return 'Sep';
-		case 'Oct':
-			return 'Oct';
-		case 'Nov':
-			return 'Nov';
-		default:
-			return 'Dec';
-	}
-};
-var allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString = function (day) {
-	switch (day.$) {
-		case 'Sun':
-			return 'Su';
-		case 'Mon':
-			return 'Mo';
-		case 'Tue':
-			return 'Tu';
-		case 'Wed':
-			return 'We';
-		case 'Thu':
-			return 'Th';
-		case 'Fri':
-			return 'Fr';
-		default:
-			return 'Sa';
-	}
-};
-var elm$core$Basics$False = {$: 'False'};
-var elm$core$Basics$True = {$: 'True'};
-var elm$time$Time$Mon = {$: 'Mon'};
-var allo_media$elm_daterange_picker$DateRangePicker$defaultConfig = {allowFuture: true, applyRangeImmediately: true, monthFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString, noRangeCaption: 'N/A', sticky: false, weekdayFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString, weeksStartOn: elm$time$Time$Mon};
-var allo_media$elm_daterange_picker$DateRangePicker$configure = function (updater) {
-	return updater(allo_media$elm_daterange_picker$DateRangePicker$defaultConfig);
-};
-var allo_media$elm_daterange_picker$DateRangePicker$State = function (a) {
-	return {$: 'State', a: a};
-};
 var elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
 			f(x));
 	});
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$Basics$EQ = {$: 'EQ'};
 var elm$core$Basics$GT = {$: 'GT'};
 var elm$core$Basics$LT = {$: 'LT'};
@@ -4559,18 +4506,11 @@ var elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
-var elm$time$Time$Apr = {$: 'Apr'};
-var elm$time$Time$Aug = {$: 'Aug'};
-var elm$time$Time$Dec = {$: 'Dec'};
-var elm$time$Time$Feb = {$: 'Feb'};
-var elm$time$Time$Jan = {$: 'Jan'};
-var elm$time$Time$Jul = {$: 'Jul'};
-var elm$time$Time$Jun = {$: 'Jun'};
-var elm$time$Time$Mar = {$: 'Mar'};
-var elm$time$Time$May = {$: 'May'};
-var elm$time$Time$Nov = {$: 'Nov'};
-var elm$time$Time$Oct = {$: 'Oct'};
-var elm$time$Time$Sep = {$: 'Sep'};
+var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Basics$gt = _Utils_gt;
+var elm$core$Basics$le = _Utils_le;
+var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$sub = _Basics_sub;
 var elm$core$Basics$fdiv = _Basics_fdiv;
 var elm$core$Basics$floor = _Basics_floor;
 var elm$core$Basics$toFloat = _Basics_toFloat;
@@ -4617,12 +4557,6 @@ var elm$time$Time$toAdjustedMinutes = F2(
 	});
 var elm$core$Basics$ge = _Utils_ge;
 var elm$core$Basics$idiv = _Basics_idiv;
-var elm$core$Basics$le = _Utils_le;
-var elm$core$Basics$mul = _Basics_mul;
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var elm$core$Basics$sub = _Basics_sub;
 var elm$time$Time$toCivil = function (minutes) {
 	var rawDay = A2(elm$time$Time$flooredDiv, minutes, 60 * 24) + 719468;
 	var era = (((rawDay >= 0) ? rawDay : (rawDay - 146096)) / 146097) | 0;
@@ -4638,6 +4572,34 @@ var elm$time$Time$toCivil = function (minutes) {
 		year: year + ((month <= 2) ? 1 : 0)
 	};
 };
+var elm$time$Time$toDay = F2(
+	function (zone, time) {
+		return elm$time$Time$toCivil(
+			A2(elm$time$Time$toAdjustedMinutes, zone, time)).day;
+	});
+var elm$core$Basics$modBy = _Basics_modBy;
+var elm$time$Time$toHour = F2(
+	function (zone, time) {
+		return A2(
+			elm$core$Basics$modBy,
+			24,
+			A2(
+				elm$time$Time$flooredDiv,
+				A2(elm$time$Time$toAdjustedMinutes, zone, time),
+				60));
+	});
+var elm$time$Time$Apr = {$: 'Apr'};
+var elm$time$Time$Aug = {$: 'Aug'};
+var elm$time$Time$Dec = {$: 'Dec'};
+var elm$time$Time$Feb = {$: 'Feb'};
+var elm$time$Time$Jan = {$: 'Jan'};
+var elm$time$Time$Jul = {$: 'Jul'};
+var elm$time$Time$Jun = {$: 'Jun'};
+var elm$time$Time$Mar = {$: 'Mar'};
+var elm$time$Time$May = {$: 'May'};
+var elm$time$Time$Nov = {$: 'Nov'};
+var elm$time$Time$Oct = {$: 'Oct'};
+var elm$time$Time$Sep = {$: 'Sep'};
 var elm$time$Time$toMonth = F2(
 	function (zone, time) {
 		var _n0 = elm$time$Time$toCivil(
@@ -4675,8 +4637,6 @@ var elm$time$Time$toYear = F2(
 			A2(elm$time$Time$toAdjustedMinutes, zone, time)).year;
 	});
 var elm$core$Basics$and = _Basics_and;
-var elm$core$Basics$eq = _Utils_equal;
-var elm$core$Basics$modBy = _Basics_modBy;
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$Basics$or = _Basics_or;
 var waratuman$time_extra$Time$Extra$isleapYear = function (y) {
@@ -4698,22 +4658,6 @@ var waratuman$time_extra$Time$Extra$daysInMonth = F2(
 			default:
 				return 31;
 		}
-	});
-var elm$core$Basics$gt = _Utils_gt;
-var elm$time$Time$toDay = F2(
-	function (zone, time) {
-		return elm$time$Time$toCivil(
-			A2(elm$time$Time$toAdjustedMinutes, zone, time)).day;
-	});
-var elm$time$Time$toHour = F2(
-	function (zone, time) {
-		return A2(
-			elm$core$Basics$modBy,
-			24,
-			A2(
-				elm$time$Time$flooredDiv,
-				A2(elm$time$Time$toAdjustedMinutes, zone, time),
-				60));
 	});
 var waratuman$time_extra$Time$Extra$msPerDay = 86400000;
 var waratuman$time_extra$Time$Extra$msPerHour = 3600000;
@@ -4787,6 +4731,225 @@ var waratuman$time_extra$Time$Extra$setSecond = F3(
 		var diff = (s_ - A2(elm$time$Time$toSecond, z, t)) * 1000;
 		return elm$time$Time$millisToPosix(t_ + diff);
 	});
+var waratuman$time_extra$Time$Extra$startOfMonth = F2(
+	function (z, d) {
+		return A3(
+			waratuman$time_extra$Time$Extra$setMillis,
+			z,
+			0,
+			A3(
+				waratuman$time_extra$Time$Extra$setSecond,
+				z,
+				0,
+				A3(
+					waratuman$time_extra$Time$Extra$setMinute,
+					z,
+					0,
+					A3(
+						waratuman$time_extra$Time$Extra$setHour,
+						z,
+						0,
+						A3(waratuman$time_extra$Time$Extra$setDay, z, 1, d)))));
+	});
+var allo_media$elm_daterange_picker$DateRangePicker$Helpers$startOfPreviousMonth = function (zone) {
+	return A2(
+		elm$core$Basics$composeR,
+		waratuman$time_extra$Time$Extra$startOfMonth(zone),
+		A2(
+			elm$core$Basics$composeR,
+			waratuman$time_extra$Time$Extra$addMillis(-1),
+			waratuman$time_extra$Time$Extra$startOfMonth(zone)));
+};
+var allo_media$elm_daterange_picker$DateRangePicker$Range$Range = function (a) {
+	return {$: 'Range', a: a};
+};
+var elm$time$Time$Zone = F2(
+	function (a, b) {
+		return {$: 'Zone', a: a, b: b};
+	});
+var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
+var elm$core$Basics$compare = _Utils_compare;
+var waratuman$time_extra$Time$Extra$compare = F2(
+	function (a, b) {
+		return A2(
+			elm$core$Basics$compare,
+			elm$time$Time$posixToMillis(a),
+			elm$time$Time$posixToMillis(b));
+	});
+var waratuman$time_extra$Time$Extra$endOfDay = F2(
+	function (z, d) {
+		return A3(
+			waratuman$time_extra$Time$Extra$setMillis,
+			z,
+			999,
+			A3(
+				waratuman$time_extra$Time$Extra$setSecond,
+				z,
+				59,
+				A3(
+					waratuman$time_extra$Time$Extra$setMinute,
+					z,
+					59,
+					A3(waratuman$time_extra$Time$Extra$setHour, z, 23, d))));
+	});
+var allo_media$elm_daterange_picker$DateRangePicker$Range$create = F2(
+	function (begin, end) {
+		var _n0 = A2(waratuman$time_extra$Time$Extra$compare, begin, end);
+		if (_n0.$ === 'GT') {
+			return allo_media$elm_daterange_picker$DateRangePicker$Range$Range(
+				{begin: end, end: begin});
+		} else {
+			return allo_media$elm_daterange_picker$DateRangePicker$Range$Range(
+				{
+					begin: begin,
+					end: A2(waratuman$time_extra$Time$Extra$endOfDay, elm$time$Time$utc, end)
+				});
+		}
+	});
+var waratuman$time_extra$Time$Extra$addDays = function (d) {
+	return A2(
+		elm$core$Basics$composeR,
+		elm$time$Time$posixToMillis,
+		A2(
+			elm$core$Basics$composeR,
+			elm$core$Basics$add(d * 86400000),
+			elm$time$Time$millisToPosix));
+};
+var waratuman$time_extra$Time$Extra$startOfDay = F2(
+	function (z, d) {
+		return A3(
+			waratuman$time_extra$Time$Extra$setMillis,
+			z,
+			0,
+			A3(
+				waratuman$time_extra$Time$Extra$setSecond,
+				z,
+				0,
+				A3(
+					waratuman$time_extra$Time$Extra$setMinute,
+					z,
+					0,
+					A3(waratuman$time_extra$Time$Extra$setHour, z, 0, d))));
+	});
+var allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges = function (today) {
+	var daysBefore = F2(
+		function (n, posix) {
+			return A2(
+				waratuman$time_extra$Time$Extra$startOfDay,
+				elm$time$Time$utc,
+				A2(waratuman$time_extra$Time$Extra$addDays, -n, posix));
+		});
+	return _List_fromArray(
+		[
+			_Utils_Tuple2(
+			'Today',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today),
+				A2(waratuman$time_extra$Time$Extra$endOfDay, elm$time$Time$utc, today))),
+			_Utils_Tuple2(
+			'Yesterday',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(
+					waratuman$time_extra$Time$Extra$startOfDay,
+					elm$time$Time$utc,
+					A2(daysBefore, 1, today)),
+				A2(
+					waratuman$time_extra$Time$Extra$endOfDay,
+					elm$time$Time$utc,
+					A2(daysBefore, 1, today)))),
+			_Utils_Tuple2(
+			'Last 7 days',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(daysBefore, 7, today),
+				A2(
+					waratuman$time_extra$Time$Extra$addMillis,
+					-1,
+					A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today)))),
+			_Utils_Tuple2(
+			'Last 30 days',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(daysBefore, 30, today),
+				A2(
+					waratuman$time_extra$Time$Extra$addMillis,
+					-1,
+					A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today)))),
+			_Utils_Tuple2(
+			'This month',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(waratuman$time_extra$Time$Extra$startOfMonth, elm$time$Time$utc, today),
+				today)),
+			_Utils_Tuple2(
+			'Last month',
+			A2(
+				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
+				A2(allo_media$elm_daterange_picker$DateRangePicker$Helpers$startOfPreviousMonth, elm$time$Time$utc, today),
+				A2(
+					waratuman$time_extra$Time$Extra$addMillis,
+					-1,
+					A2(waratuman$time_extra$Time$Extra$startOfMonth, elm$time$Time$utc, today))))
+		]);
+};
+var allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString = function (month) {
+	switch (month.$) {
+		case 'Jan':
+			return 'Jan';
+		case 'Feb':
+			return 'Feb';
+		case 'Mar':
+			return 'Mar';
+		case 'Apr':
+			return 'Apr';
+		case 'May':
+			return 'May';
+		case 'Jun':
+			return 'Jun';
+		case 'Jul':
+			return 'Jul';
+		case 'Aug':
+			return 'Aug';
+		case 'Sep':
+			return 'Sep';
+		case 'Oct':
+			return 'Oct';
+		case 'Nov':
+			return 'Nov';
+		default:
+			return 'Dec';
+	}
+};
+var allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString = function (day) {
+	switch (day.$) {
+		case 'Sun':
+			return 'Su';
+		case 'Mon':
+			return 'Mo';
+		case 'Tue':
+			return 'Tu';
+		case 'Wed':
+			return 'We';
+		case 'Thu':
+			return 'Th';
+		case 'Fri':
+			return 'Fr';
+		default:
+			return 'Sa';
+	}
+};
+var elm$core$Basics$False = {$: 'False'};
+var elm$core$Basics$True = {$: 'True'};
+var elm$time$Time$Mon = {$: 'Mon'};
+var allo_media$elm_daterange_picker$DateRangePicker$defaultConfig = {allowFuture: true, applyRangeImmediately: true, monthFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString, noRangeCaption: 'N/A', predefinedRanges: allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges, sticky: false, weekdayFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString, weeksStartOn: elm$time$Time$Mon};
+var allo_media$elm_daterange_picker$DateRangePicker$configure = function (updater) {
+	return updater(allo_media$elm_daterange_picker$DateRangePicker$defaultConfig);
+};
+var allo_media$elm_daterange_picker$DateRangePicker$State = function (a) {
+	return {$: 'State', a: a};
+};
 var waratuman$time_extra$Time$Extra$endOfMonth = F2(
 	function (z, d) {
 		return A3(
@@ -4820,35 +4983,6 @@ var allo_media$elm_daterange_picker$DateRangePicker$Helpers$startOfNextMonth = f
 		waratuman$time_extra$Time$Extra$endOfMonth(zone),
 		waratuman$time_extra$Time$Extra$addMillis(1));
 };
-var waratuman$time_extra$Time$Extra$startOfMonth = F2(
-	function (z, d) {
-		return A3(
-			waratuman$time_extra$Time$Extra$setMillis,
-			z,
-			0,
-			A3(
-				waratuman$time_extra$Time$Extra$setSecond,
-				z,
-				0,
-				A3(
-					waratuman$time_extra$Time$Extra$setMinute,
-					z,
-					0,
-					A3(
-						waratuman$time_extra$Time$Extra$setHour,
-						z,
-						0,
-						A3(waratuman$time_extra$Time$Extra$setDay, z, 1, d)))));
-	});
-var allo_media$elm_daterange_picker$DateRangePicker$Helpers$startOfPreviousMonth = function (zone) {
-	return A2(
-		elm$core$Basics$composeR,
-		waratuman$time_extra$Time$Extra$startOfMonth(zone),
-		A2(
-			elm$core$Basics$composeR,
-			waratuman$time_extra$Time$Extra$addMillis(-1),
-			waratuman$time_extra$Time$Extra$startOfMonth(zone)));
-};
 var allo_media$elm_daterange_picker$DateRangePicker$Range$beginsAt = function (_n0) {
 	var begin = _n0.a.begin;
 	return begin;
@@ -4857,11 +4991,6 @@ var allo_media$elm_daterange_picker$DateRangePicker$Range$endsAt = function (_n0
 	var end = _n0.a.end;
 	return end;
 };
-var elm$time$Time$Zone = F2(
-	function (a, b) {
-		return {$: 'Zone', a: a, b: b};
-	});
-var elm$time$Time$utc = A2(elm$time$Time$Zone, 0, _List_Nil);
 var allo_media$elm_daterange_picker$DateRangePicker$getCalendars = F3(
 	function (config, maybeRange, today) {
 		var _n0 = _Utils_Tuple2(config.allowFuture, maybeRange);
@@ -5498,11 +5627,11 @@ var elm$core$Task$perform = F2(
 				A2(elm$core$Task$map, toMessage, task)));
 	});
 var allo_media$elm_daterange_picker$DateRangePicker$now = F2(
-	function (tagger, _n0) {
+	function (toMsg, _n0) {
 		var internal = _n0.a;
 		return A2(
 			elm$core$Task$perform,
-			tagger,
+			toMsg,
 			A2(allo_media$elm_daterange_picker$DateRangePicker$nowTask, internal.config, internal.current));
 	});
 var allo_media$elm_daterange_picker$Main$PickerChanged = function (a) {
@@ -5527,47 +5656,6 @@ var allo_media$elm_daterange_picker$Main$init = function (_n0) {
 		elm$core$Maybe$Nothing);
 };
 var allo_media$elm_daterange_picker$DateRangePicker$Close = {$: 'Close'};
-var allo_media$elm_daterange_picker$DateRangePicker$Range$Range = function (a) {
-	return {$: 'Range', a: a};
-};
-var elm$core$Basics$compare = _Utils_compare;
-var waratuman$time_extra$Time$Extra$compare = F2(
-	function (a, b) {
-		return A2(
-			elm$core$Basics$compare,
-			elm$time$Time$posixToMillis(a),
-			elm$time$Time$posixToMillis(b));
-	});
-var waratuman$time_extra$Time$Extra$endOfDay = F2(
-	function (z, d) {
-		return A3(
-			waratuman$time_extra$Time$Extra$setMillis,
-			z,
-			999,
-			A3(
-				waratuman$time_extra$Time$Extra$setSecond,
-				z,
-				59,
-				A3(
-					waratuman$time_extra$Time$Extra$setMinute,
-					z,
-					59,
-					A3(waratuman$time_extra$Time$Extra$setHour, z, 23, d))));
-	});
-var allo_media$elm_daterange_picker$DateRangePicker$Range$create = F2(
-	function (begin, end) {
-		var _n0 = A2(waratuman$time_extra$Time$Extra$compare, begin, end);
-		if (_n0.$ === 'GT') {
-			return allo_media$elm_daterange_picker$DateRangePicker$Range$Range(
-				{begin: end, end: begin});
-		} else {
-			return allo_media$elm_daterange_picker$DateRangePicker$Range$Range(
-				{
-					begin: begin,
-					end: A2(waratuman$time_extra$Time$Extra$endOfDay, elm$time$Time$utc, end)
-				});
-		}
-	});
 var allo_media$elm_daterange_picker$DateRangePicker$Step$Begin = function (a) {
 	return {$: 'Begin', a: a};
 };
@@ -5595,11 +5683,16 @@ var allo_media$elm_daterange_picker$DateRangePicker$update = F2(
 		switch (msg.$) {
 			case 'Apply':
 				var dateRange = msg.a;
+				var _n1 = A3(allo_media$elm_daterange_picker$DateRangePicker$getCalendars, internal.config, dateRange, internal.today);
+				var newLeftCal = _n1.a;
+				var newRightCal = _n1.b;
 				return _Utils_update(
 					internal,
 					{
 						current: dateRange,
+						leftCal: newLeftCal,
 						opened: false,
+						rightCal: newRightCal,
 						step: allo_media$elm_daterange_picker$DateRangePicker$Step$fromMaybe(dateRange)
 					});
 			case 'Clear':
@@ -5640,9 +5733,12 @@ var allo_media$elm_daterange_picker$DateRangePicker$update = F2(
 			case 'NoOp':
 				return internal;
 			case 'Open':
+				var _n3 = A3(allo_media$elm_daterange_picker$DateRangePicker$getCalendars, internal.config, internal.current, internal.today);
+				var newLeftCal = _n3.a;
+				var newRightCal = _n3.b;
 				return _Utils_update(
 					internal,
-					{opened: true});
+					{leftCal: newLeftCal, opened: true, rightCal: newRightCal});
 			case 'Pick':
 				var picked = msg.a;
 				return _Utils_update(
@@ -5659,13 +5755,13 @@ var allo_media$elm_daterange_picker$DateRangePicker$update = F2(
 					});
 			default:
 				var dateRange = msg.a;
-				var _n2 = A3(
+				var _n4 = A3(
 					allo_media$elm_daterange_picker$DateRangePicker$getCalendars,
 					internal.config,
 					elm$core$Maybe$Just(dateRange),
 					internal.today);
-				var newLeftCal = _n2.a;
-				var newRightCal = _n2.b;
+				var newLeftCal = _n4.a;
+				var newRightCal = _n4.b;
 				return _Utils_update(
 					internal,
 					{
@@ -5675,6 +5771,13 @@ var allo_media$elm_daterange_picker$DateRangePicker$update = F2(
 							elm$core$Maybe$Just(dateRange))
 					});
 		}
+	});
+var allo_media$elm_daterange_picker$DateRangePicker$handleEvent = F2(
+	function (toMsg, msg) {
+		return A2(
+			elm$core$Basics$composeR,
+			allo_media$elm_daterange_picker$DateRangePicker$update(msg),
+			A2(elm$core$Basics$composeR, allo_media$elm_daterange_picker$DateRangePicker$State, toMsg));
 	});
 var elm$browser$Browser$Events$Document = {$: 'Document'};
 var elm$browser$Browser$Events$MySub = F3(
@@ -6242,21 +6345,19 @@ var elm$core$Basics$not = _Basics_not;
 var elm$core$Platform$Sub$batch = _Platform_batch;
 var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
 var allo_media$elm_daterange_picker$DateRangePicker$subscriptions = F2(
-	function (tagger, _n0) {
+	function (toMsg, _n0) {
 		var internal = _n0.a;
 		return (internal.opened && (!internal.config.sticky)) ? elm$browser$Browser$Events$onMouseUp(
 			elm$json$Json$Decode$succeed(
-				tagger(
-					allo_media$elm_daterange_picker$DateRangePicker$State(
-						A2(allo_media$elm_daterange_picker$DateRangePicker$update, allo_media$elm_daterange_picker$DateRangePicker$Close, internal))))) : elm$core$Platform$Sub$none;
+				A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Close, internal))) : elm$core$Platform$Sub$none;
 	});
 var allo_media$elm_daterange_picker$Main$subscriptions = function (_n0) {
 	var picker = _n0.picker;
 	return A2(allo_media$elm_daterange_picker$DateRangePicker$subscriptions, allo_media$elm_daterange_picker$Main$PickerChanged, picker);
 };
 var allo_media$elm_daterange_picker$DateRangePicker$getRange = function (_n0) {
-	var internal = _n0.a;
-	return internal.current;
+	var current = _n0.a.current;
+	return current;
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
@@ -6278,13 +6379,6 @@ var allo_media$elm_daterange_picker$Main$update = F2(
 		}
 	});
 var allo_media$elm_daterange_picker$DateRangePicker$Open = {$: 'Open'};
-var allo_media$elm_daterange_picker$DateRangePicker$handleEvent = F2(
-	function (tagger, msg) {
-		return A2(
-			elm$core$Basics$composeR,
-			allo_media$elm_daterange_picker$DateRangePicker$update(msg),
-			A2(elm$core$Basics$composeR, allo_media$elm_daterange_picker$DateRangePicker$State, tagger));
-	});
 var allo_media$elm_daterange_picker$DateRangePicker$Apply = function (a) {
 	return {$: 'Apply', a: a};
 };
@@ -6300,94 +6394,6 @@ var allo_media$elm_daterange_picker$DateRangePicker$Pick = function (a) {
 var allo_media$elm_daterange_picker$DateRangePicker$Prev = {$: 'Prev'};
 var allo_media$elm_daterange_picker$DateRangePicker$Set = function (a) {
 	return {$: 'Set', a: a};
-};
-var waratuman$time_extra$Time$Extra$addDays = function (d) {
-	return A2(
-		elm$core$Basics$composeR,
-		elm$time$Time$posixToMillis,
-		A2(
-			elm$core$Basics$composeR,
-			elm$core$Basics$add(d * 86400000),
-			elm$time$Time$millisToPosix));
-};
-var waratuman$time_extra$Time$Extra$startOfDay = F2(
-	function (z, d) {
-		return A3(
-			waratuman$time_extra$Time$Extra$setMillis,
-			z,
-			0,
-			A3(
-				waratuman$time_extra$Time$Extra$setSecond,
-				z,
-				0,
-				A3(
-					waratuman$time_extra$Time$Extra$setMinute,
-					z,
-					0,
-					A3(waratuman$time_extra$Time$Extra$setHour, z, 0, d))));
-	});
-var allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges = function (today) {
-	var daysBefore = F2(
-		function (n, posix) {
-			return A2(
-				waratuman$time_extra$Time$Extra$startOfDay,
-				elm$time$Time$utc,
-				A2(waratuman$time_extra$Time$Extra$addDays, -n, posix));
-		});
-	return _List_fromArray(
-		[
-			_Utils_Tuple2(
-			'Today',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today),
-				A2(waratuman$time_extra$Time$Extra$endOfDay, elm$time$Time$utc, today))),
-			_Utils_Tuple2(
-			'Yesterday',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(
-					waratuman$time_extra$Time$Extra$startOfDay,
-					elm$time$Time$utc,
-					A2(daysBefore, 1, today)),
-				A2(
-					waratuman$time_extra$Time$Extra$endOfDay,
-					elm$time$Time$utc,
-					A2(daysBefore, 1, today)))),
-			_Utils_Tuple2(
-			'Last 7 days',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(daysBefore, 7, today),
-				A2(
-					waratuman$time_extra$Time$Extra$addMillis,
-					-1,
-					A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today)))),
-			_Utils_Tuple2(
-			'Last 30 days',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(daysBefore, 30, today),
-				A2(
-					waratuman$time_extra$Time$Extra$addMillis,
-					-1,
-					A2(waratuman$time_extra$Time$Extra$startOfDay, elm$time$Time$utc, today)))),
-			_Utils_Tuple2(
-			'This month',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(waratuman$time_extra$Time$Extra$startOfMonth, elm$time$Time$utc, today),
-				today)),
-			_Utils_Tuple2(
-			'Last month',
-			A2(
-				allo_media$elm_daterange_picker$DateRangePicker$Range$create,
-				A2(allo_media$elm_daterange_picker$DateRangePicker$Helpers$startOfPreviousMonth, elm$time$Time$utc, today),
-				A2(
-					waratuman$time_extra$Time$Extra$addMillis,
-					-1,
-					A2(waratuman$time_extra$Time$Extra$startOfMonth, elm$time$Time$utc, today))))
-		]);
 };
 var allo_media$elm_daterange_picker$DateRangePicker$Step$toMaybe = function (step) {
 	if (step.$ === 'Complete') {
@@ -6454,7 +6460,7 @@ var elm$html$Html$Events$onClick = function (msg) {
 		elm$json$Json$Decode$succeed(msg));
 };
 var allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView = F2(
-	function (tagger, internal) {
+	function (toMsg, internal) {
 		var config = internal.config;
 		var step = internal.step;
 		var today = internal.today;
@@ -6478,13 +6484,13 @@ var allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView = F2(
 						config.applyRangeImmediately ? elm$html$Html$Events$onClick(
 						A3(
 							allo_media$elm_daterange_picker$DateRangePicker$handleEvent,
-							tagger,
+							toMsg,
 							allo_media$elm_daterange_picker$DateRangePicker$Apply(
 								elm$core$Maybe$Just(range)),
 							internal)) : elm$html$Html$Events$onClick(
 						A3(
 							allo_media$elm_daterange_picker$DateRangePicker$handleEvent,
-							tagger,
+							toMsg,
 							allo_media$elm_daterange_picker$DateRangePicker$Set(range),
 							internal))
 					]),
@@ -6510,7 +6516,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView = F2(
 					A2(
 						elm$core$List$map,
 						entry,
-						allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges(today)))
+						internal.config.predefinedRanges(today)))
 				]));
 	});
 var allo_media$elm_daterange_picker$DateRangePicker$Range$between = F2(
@@ -7208,7 +7214,7 @@ var elm$html$Html$Events$custom = F2(
 			elm$virtual_dom$VirtualDom$Custom(decoder));
 	});
 var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
-	function (tagger, _n0) {
+	function (toMsg, _n0) {
 		var internal = _n0.a;
 		var onMouseUp = function (msg) {
 			return A2(
@@ -7222,18 +7228,18 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 			hover: function (posix) {
 				return A3(
 					allo_media$elm_daterange_picker$DateRangePicker$handleEvent,
-					tagger,
+					toMsg,
 					allo_media$elm_daterange_picker$DateRangePicker$Hover(posix),
 					internal);
 			},
 			hovered: internal.hovered,
 			monthFormatter: internal.config.monthFormatter,
 			next: elm$core$Maybe$Nothing,
-			noOp: A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$NoOp, internal),
+			noOp: A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$NoOp, internal),
 			pick: function (posix) {
 				return A3(
 					allo_media$elm_daterange_picker$DateRangePicker$handleEvent,
-					tagger,
+					toMsg,
 					allo_media$elm_daterange_picker$DateRangePicker$Pick(posix),
 					internal);
 			},
@@ -7260,17 +7266,17 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 							_Utils_Tuple2('EDRP__body--sticky', internal.config.sticky)
 						])),
 					onMouseUp(
-					A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$NoOp, internal))
+					A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$NoOp, internal))
 				]),
 			_List_fromArray(
 				[
-					A2(allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView, tagger, internal),
+					A2(allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView, toMsg, internal),
 					allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
 					_Utils_update(
 						baseCalendar,
 						{
 							prev: elm$core$Maybe$Just(
-								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Prev, internal)),
+								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Prev, internal)),
 							target: internal.leftCal
 						})),
 					allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
@@ -7278,7 +7284,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 						baseCalendar,
 						{
 							next: allowNext ? elm$core$Maybe$Just(
-								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Next, internal)) : elm$core$Maybe$Nothing,
+								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Next, internal)) : elm$core$Maybe$Nothing,
 							target: internal.rightCal
 						})),
 					A2(
@@ -7323,7 +7329,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 											elm$html$Html$Attributes$class('EDRP__button'),
 											elm$html$Html$Attributes$type_('button'),
 											elm$html$Html$Events$onClick(
-											A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Close, internal))
+											A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Close, internal))
 										]),
 									_List_fromArray(
 										[
@@ -7338,7 +7344,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 											elm$html$Html$Attributes$disabled(
 											_Utils_eq(internal.step, allo_media$elm_daterange_picker$DateRangePicker$Step$Initial)),
 											elm$html$Html$Events$onClick(
-											A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Clear, internal))
+											A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Clear, internal))
 										]),
 									_List_fromArray(
 										[
@@ -7353,7 +7359,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 											elm$html$Html$Events$onClick(
 											A3(
 												allo_media$elm_daterange_picker$DateRangePicker$handleEvent,
-												tagger,
+												toMsg,
 												allo_media$elm_daterange_picker$DateRangePicker$Apply(
 													allo_media$elm_daterange_picker$DateRangePicker$Step$toMaybe(internal.step)),
 												internal))
@@ -7370,7 +7376,7 @@ var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$Attributes$readonly = elm$html$Html$Attributes$boolProperty('readOnly');
 var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
 var allo_media$elm_daterange_picker$DateRangePicker$view = F2(
-	function (tagger, _n0) {
+	function (toMsg, _n0) {
 		var internal = _n0.a;
 		return A2(
 			elm$html$Html$div,
@@ -7395,13 +7401,13 @@ var allo_media$elm_daterange_picker$DateRangePicker$view = F2(
 									allo_media$elm_daterange_picker$DateRangePicker$Range$format(elm$time$Time$utc),
 									internal.current))),
 							elm$html$Html$Events$onClick(
-							A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, tagger, allo_media$elm_daterange_picker$DateRangePicker$Open, internal)),
+							A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Open, internal)),
 							elm$html$Html$Attributes$readonly(true)
 						]),
 					_List_Nil),
 					(internal.config.sticky || internal.opened) ? A2(
 					allo_media$elm_daterange_picker$DateRangePicker$panel,
-					tagger,
+					toMsg,
 					allo_media$elm_daterange_picker$DateRangePicker$State(internal)) : elm$html$Html$text('')
 				]));
 	});
