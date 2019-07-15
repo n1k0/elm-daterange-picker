@@ -10,6 +10,10 @@
   position: relative;
 }
 
+.EDRP * {
+  box-sizing: border-box;
+}
+
 .EDRP__body {
   position: absolute;
   top: 100%;
@@ -57,9 +61,13 @@
   opacity: .4;
 }
 
+.EDRPPresets {
+  display: flex;
+}
+
 .EDRPPresets__list {
-  margin: 0;
-  padding: 10px;
+  flex: 1;
+  padding: 0 10px;
   list-style: none;
   max-height: 226px;
   min-width: 120px;
@@ -88,7 +96,7 @@
 }
 
 .EDRPCalendar {
-  margin: 0 10px 0 0;
+  margin: 0 10px 10px 0;
   padding: 10px 0 0 10px;
   text-align: center;
 }
@@ -165,11 +173,12 @@
 }
 
 .EDRPCalendar__nav {
+  position: relative;
   cursor: pointer;
-  height: 15px;
+  height: 1.8rem;
+  top: 2px;
   padding: 7px;
   border-radius: 5px;
-  margin-bottom: 7px;
 }
 
 .EDRPCalendar__nav:hover {
