@@ -4943,7 +4943,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString = fu
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$time$Time$Mon = {$: 'Mon'};
-var allo_media$elm_daterange_picker$DateRangePicker$defaultConfig = {allowFuture: true, applyRangeImmediately: true, _class: '', monthFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString, noRangeCaption: 'N/A', predefinedRanges: allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges, sticky: false, weekdayFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString, weeksStartOn: elm$time$Time$Mon};
+var allo_media$elm_daterange_picker$DateRangePicker$defaultConfig = {allowFuture: true, applyRangeImmediately: true, _class: '', inputClass: '', monthFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$monthToString, noRangeCaption: 'N/A', predefinedRanges: allo_media$elm_daterange_picker$DateRangePicker$defaultPredefinedRanges, sticky: false, weekdayFormatter: allo_media$elm_daterange_picker$DateRangePicker$Helpers$weekdayToString, weeksStartOn: elm$time$Time$Mon};
 var allo_media$elm_daterange_picker$DateRangePicker$configure = function (updater) {
 	return updater(allo_media$elm_daterange_picker$DateRangePicker$defaultConfig);
 };
@@ -7396,7 +7396,8 @@ var allo_media$elm_daterange_picker$DateRangePicker$view = F2(
 					_List_fromArray(
 						[
 							elm$html$Html$Attributes$type_('text'),
-							elm$html$Html$Attributes$class('EDRP__input'),
+							elm$html$Html$Attributes$class(
+							elm$core$String$trim('EDRP__input ' + internal.config.inputClass)),
 							elm$html$Html$Attributes$disabled(internal.disabled),
 							elm$html$Html$Attributes$value(
 							A2(
