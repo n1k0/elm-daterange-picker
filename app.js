@@ -7270,23 +7270,32 @@ var allo_media$elm_daterange_picker$DateRangePicker$panel = F2(
 				]),
 			_List_fromArray(
 				[
-					A2(allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView, toMsg, internal),
-					allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
-					_Utils_update(
-						baseCalendar,
-						{
-							prev: elm$core$Maybe$Just(
-								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Prev, internal)),
-							target: internal.leftCal
-						})),
-					allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
-					_Utils_update(
-						baseCalendar,
-						{
-							next: allowNext ? elm$core$Maybe$Just(
-								A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Next, internal)) : elm$core$Maybe$Nothing,
-							target: internal.rightCal
-						})),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('EDRP__selectors')
+						]),
+					_List_fromArray(
+						[
+							A2(allo_media$elm_daterange_picker$DateRangePicker$predefinedRangesView, toMsg, internal),
+							allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
+							_Utils_update(
+								baseCalendar,
+								{
+									prev: elm$core$Maybe$Just(
+										A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Prev, internal)),
+									target: internal.leftCal
+								})),
+							allo_media$elm_daterange_picker$DateRangePicker$Calendar$view(
+							_Utils_update(
+								baseCalendar,
+								{
+									next: allowNext ? elm$core$Maybe$Just(
+										A3(allo_media$elm_daterange_picker$DateRangePicker$handleEvent, toMsg, allo_media$elm_daterange_picker$DateRangePicker$Next, internal)) : elm$core$Maybe$Nothing,
+									target: internal.rightCal
+								}))
+						])),
 					A2(
 					elm$html$Html$div,
 					_List_fromArray(
