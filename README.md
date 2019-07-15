@@ -71,7 +71,7 @@ colors **after** calling our CSS, and it's done:
 
 So if you have questionable tastes, you can eventually obtain this:
 
-![](https://i.imgur.com/XxclGPc.png)
+![](https://i.imgur.com/rDUpzEB.png)
 
 ## Install
 
