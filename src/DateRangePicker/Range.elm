@@ -32,7 +32,8 @@ import Time.Extra as TE
 
 
 {-| A time range between two
-[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
+[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix),
+always expressed in UTC.
 -}
 type Range
     = Range InternalRange

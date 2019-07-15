@@ -76,17 +76,19 @@ import Time.Extra as TE
 
   - `allowFuture`: Allow picking a range in the future
   - `applyRangeImmediately`: Apply predefined range immediately when clicked
-  - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
+  - `class`: CSS class name(s) to add to the component root element.
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
   - `predefinedRanges`: Generates custom predefined ranges.
   - `sticky`: Make the picker always opened
+  - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
 
 -}
 type alias Config =
     { allowFuture : Bool
     , applyRangeImmediately : Bool
+    , class : String
     , weekdayFormatter : Time.Weekday -> String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
@@ -100,11 +102,12 @@ type alias Config =
 
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
-  - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
+  - `class`: `""`
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
   - `predefinedRanges`: `"Today"`, `"Yesterday"`, `"Last 7 days"`, `"Last 30 days"`, `"This month"` and `"Last month"`
   - `sticky`: `False`
+  - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
   - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
 -}
@@ -112,6 +115,7 @@ defaultConfig : Config
 defaultConfig =
     { allowFuture = True
     , applyRangeImmediately = True
+    , class = ""
     , weekdayFormatter = Helpers.weekdayToString
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
@@ -562,9 +566,10 @@ a new [`State`](#State) each time it's changed:
 -}
 view : (State -> msg) -> State -> Html msg
 view toMsg (State internal) =
-    div [ class "EDRP" ]
+    div [ "EDRP " ++ internal.config.class |> String.trim |> class ]
         [ input
             [ type_ "text"
+            , class "EDRP__input"
             , HA.disabled internal.disabled
             , internal.current
                 |> Maybe.map (Range.format utc)
