@@ -19,11 +19,16 @@
   background: var(--edrp-background-color);
   border: 1px solid var(--edrp-border-color);
   border-radius: 5px;
+  z-index: 1;
 }
 
 .EDRP__body--sticky {
   position: relative;
   width: 670px;
+}
+
+.EDRP__selectors {
+  display: flex;
 }
 
 .EDRP__button {
@@ -50,10 +55,6 @@
 
 .EDRP__button[disabled] {
   opacity: .4;
-}
-
-.EDRPPresets {
-  float: left;
 }
 
 .EDRPPresets__list {
@@ -87,7 +88,6 @@
 }
 
 .EDRPCalendar {
-  float: left;
   margin: 0 10px 0 0;
   padding: 10px 0 0 10px;
   text-align: center;
@@ -190,17 +190,13 @@
 }
 
 .EDRPFoot {
-  clear: both;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: rgba(155, 155, 155, 0.2);
   padding: 10px;
 }
 
 .EDRPFoot__actions {
-  float: right;
-}
-
-.EDRPFoot::after {
-  clear: both;
-  content: "";
-  display: table;
+  margin-left: auto;
 }
