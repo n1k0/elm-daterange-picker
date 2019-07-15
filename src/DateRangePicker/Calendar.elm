@@ -130,10 +130,10 @@ navLink : String -> Maybe msg -> Html msg
 navLink label maybeMsg =
     case maybeMsg of
         Just msg ->
-            th [ class <| "EDRPCalendar__nav " ++ label, onClick msg ] [ span [] [] ]
+            th [ class <| "EDRPCalendar__nav", onClick msg ] [ text label ]
 
         Nothing ->
-            th [] [ span [] [] ]
+            th [] []
 
 
 view : Config msg -> Html msg
@@ -142,10 +142,10 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
                 [ tr [ class "EDRPCalendar__head" ]
-                    [ navLink "EDRPCalendar__nav--prev" prev
+                    [ navLink "⭠" prev
                     , th [ class "EDRPCalendar__month", colspan 5 ]
                         [ text (Helpers.shortMonth utc monthFormatter target) ]
-                    , navLink "EDRPCalendar__nav--next" next
+                    , navLink "⭢" next
                     ]
                 , weekdayNames weekdayFormatter weeksStartOn
                     |> List.map (\name -> th [] [ text name ])
