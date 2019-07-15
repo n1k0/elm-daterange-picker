@@ -7134,7 +7134,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$view = function (co
 									]),
 								_List_fromArray(
 									[
-										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '←', prev),
+										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '🠜', prev),
 										A2(
 										elm$html$Html$th,
 										_List_fromArray(
@@ -7147,7 +7147,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$view = function (co
 												elm$html$Html$text(
 												A3(allo_media$elm_daterange_picker$DateRangePicker$Helpers$shortMonth, elm$time$Time$utc, monthFormatter, target))
 											])),
-										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '→', next)
+										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '🠞', next)
 									])),
 								A2(
 								elm$html$Html$tr,
