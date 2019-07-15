@@ -77,6 +77,7 @@ import Time.Extra as TE
   - `allowFuture`: Allow picking a range in the future
   - `applyRangeImmediately`: Apply predefined range immediately when clicked
   - `class`: CSS class name(s) to add to the component root element.
+  - `inputClass`: CSS class name(s) to add to the component text input.
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
   - `predefinedRanges`: Generates custom predefined ranges.
@@ -89,11 +90,12 @@ type alias Config =
     { allowFuture : Bool
     , applyRangeImmediately : Bool
     , class : String
-    , weekdayFormatter : Time.Weekday -> String
+    , inputClass : String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
     , predefinedRanges : Posix -> List ( String, Range )
     , sticky : Bool
+    , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
     }
 
@@ -103,6 +105,7 @@ type alias Config =
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
   - `class`: `""`
+  - `inputClass`: `""`
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
   - `predefinedRanges`: `"Today"`, `"Yesterday"`, `"Last 7 days"`, `"Last 30 days"`, `"This month"` and `"Last month"`
@@ -116,11 +119,12 @@ defaultConfig =
     { allowFuture = True
     , applyRangeImmediately = True
     , class = ""
-    , weekdayFormatter = Helpers.weekdayToString
+    , inputClass = ""
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
     , predefinedRanges = defaultPredefinedRanges
     , sticky = False
+    , weekdayFormatter = Helpers.weekdayToString
     , weeksStartOn = Time.Mon
     }
 
@@ -571,7 +575,7 @@ view toMsg (State internal) =
     div [ "EDRP " ++ internal.config.class |> String.trim |> class ]
         [ input
             [ type_ "text"
-            , class "EDRP__input"
+            , "EDRP__input " ++ internal.config.inputClass |> String.trim |> class
             , HA.disabled internal.disabled
             , internal.current
                 |> Maybe.map (Range.format utc)
