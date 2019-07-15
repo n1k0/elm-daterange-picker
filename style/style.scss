@@ -108,6 +108,7 @@ $grey: rgb(155, 155, 155);
             border-radius: 3px;
             font-weight: bold;
             font-size: 0.9em;
+            user-select: none;
 
             &:hover {
                 background: rgba($grey, 0.3);
@@ -179,6 +180,7 @@ $grey: rgb(155, 155, 155);
             cursor: pointer;
             font-size: 1.1em;
             border-radius: 5px;
+            user-select: none;
 
             &:hover {
                 background: rgba($grey, 0.3);
