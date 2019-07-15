@@ -7,9 +7,6 @@ A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://allo
 Default theme:
 ![](https://i.imgur.com/A7I9AKo.jpg)
 
-If you have questionable tastes, you can do that:
-![](https://i.imgur.com/B2acsjG.jpg)
-
 Selecting a date range is a common operation for many Web applications. While
 there are offerings in the Elm ecosystem, we couldn't find any ergonomic
 equivalent of [daterangepicker](http://www.daterangepicker.com/), which this
@@ -55,13 +52,13 @@ view model =
 
 ## Customize styles
 
-By default, we have not defined a font-family, so that the style fits any site.
+By default, we have not defined any default `font-family`, so that the style
+fits any app/site.
 
-You can use the [demo.css] file or its [SCSS source] for fine-tuning the
-default styles of the datepicker.
-
-The default stylesheet uses CSS variables to help you tweaking most colors used
-by the component (just add **your** root colors **after** calling our CSS, and it's done.) :
+You can use the [style.css] file or its [SCSS source] as a starting point for
+fine-tuning the default styles of the datepicker, which also uses CSS variables
+to help you tweaking most colors used by the component; just add your own root
+colors **after** calling our CSS, and it's done:
 
 ```CSS
 :root {
@@ -72,6 +69,9 @@ by the component (just add **your** root colors **after** calling our CSS, and i
   --edrp-border-color: lightgrey;
 }
 ```
+
+So if you have questionable tastes, you can eventually obtain this:
+![](https://i.imgur.com/B2acsjG.jpg)
 
 ## Install
 
@@ -103,5 +103,5 @@ working when editing `demo/Main.elm`:
 
 MIT
 
-[demo.css]: https://github.com/allo-media/elm-daterange-picker/blob/master/demo/demo.css
-[scss source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/demo.scss
+[style.css]: https://allo-media.github.io/elm-daterange-picker/style.css
+[scss source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/style.scss
