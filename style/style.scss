@@ -11,6 +11,10 @@ $grey: rgb(155, 155, 155);
 .EDRP {
     position: relative;
 
+    * {
+      box-sizing: border-box;
+    }
+
     &__body {
         position: absolute;
         top: 100%;
@@ -59,9 +63,11 @@ $grey: rgb(155, 155, 155);
     }
 
     &Presets {
+        display: flex;
+
         &__list {
-            margin: 0;
-            padding: 10px;
+            flex: 1;
+            padding: 0 10px;
             list-style: none;
             max-height: 226px;
             min-width: 120px;
@@ -91,7 +97,7 @@ $grey: rgb(155, 155, 155);
     }
 
     &Calendar {
-        margin: 0 10px 0 0;
+        margin: 0 10px 10px 0;
         padding: 10px 0 0 10px;
         text-align: center;
 
@@ -168,11 +174,12 @@ $grey: rgb(155, 155, 155);
         }
 
         &__nav {
+            position: relative;
             cursor: pointer;
-            height: 15px;
+            height: 1.8rem;
+            top: 2px;
             padding: 7px;
             border-radius: 5px;
-            margin-bottom: 7px;
 
             &:hover {
                 background: rgba($grey, 0.3);
