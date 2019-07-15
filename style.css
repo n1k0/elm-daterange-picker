@@ -166,10 +166,9 @@
 
 .EDRPCalendar__nav {
   cursor: pointer;
-  height: 15px;
+  height: 1rem;
   padding: 7px;
   border-radius: 5px;
-  margin-bottom: 7px;
 }
 
 .EDRPCalendar__nav:hover {
