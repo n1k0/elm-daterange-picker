@@ -67,8 +67,9 @@ $grey: rgb(155, 155, 155);
 
         &__list {
             flex: 1;
-            padding: 0 10px;
+            padding: 15px 10px;
             list-style: none;
+            margin: 0;
             max-height: 226px;
             min-width: 120px;
             overflow: auto;
