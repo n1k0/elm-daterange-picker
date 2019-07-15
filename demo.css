@@ -19,16 +19,11 @@
   background: var(--edrp-background-color);
   border: 1px solid var(--edrp-border-color);
   border-radius: 5px;
-  z-index: 1;
 }
 
 .EDRP__body--sticky {
   position: relative;
   width: 670px;
-}
-
-.EDRP__selectors {
-  display: flex;
 }
 
 .EDRP__button {
@@ -55,6 +50,10 @@
 
 .EDRP__button[disabled] {
   opacity: .4;
+}
+
+.EDRPPresets {
+  float: left;
 }
 
 .EDRPPresets__list {
@@ -88,6 +87,7 @@
 }
 
 .EDRPCalendar {
+  float: left;
   margin: 0 10px 0 0;
   padding: 10px 0 0 10px;
   text-align: center;
@@ -166,9 +166,10 @@
 
 .EDRPCalendar__nav {
   cursor: pointer;
-  height: 1rem;
+  height: 15px;
   padding: 7px;
   border-radius: 5px;
+  margin-bottom: 7px;
 }
 
 .EDRPCalendar__nav:hover {
@@ -189,13 +190,17 @@
 }
 
 .EDRPFoot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  clear: both;
   background: rgba(155, 155, 155, 0.2);
   padding: 10px;
 }
 
 .EDRPFoot__actions {
-  margin-left: auto;
+  float: right;
+}
+
+.EDRPFoot::after {
+  clear: both;
+  content: "";
+  display: table;
 }
