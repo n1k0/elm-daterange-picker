@@ -41,7 +41,7 @@
   font-weight: bold;
   font-family: inherit;
   padding: 5px 10px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   border-radius: 3px;
   margin-left: 5px;
   color: rgba(0, 0, 0, 0.8);
@@ -106,7 +106,7 @@
   cursor: pointer;
   border-radius: 3px;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.9em;
 }
 
 .EDRPCalendar__cell:hover {
