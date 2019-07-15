@@ -483,22 +483,24 @@ panel toMsg (State internal) =
             ]
         , onMouseUp <| handleEvent toMsg NoOp internal
         ]
-        [ predefinedRangesView toMsg internal
-        , Calendar.view
-            { baseCalendar
-                | target = internal.leftCal
-                , prev = Just (handleEvent toMsg Prev internal)
-            }
-        , Calendar.view
-            { baseCalendar
-                | target = internal.rightCal
-                , next =
-                    if allowNext then
-                        Just (handleEvent toMsg Next internal)
+        [ div [ class "EDRP__selectors" ]
+            [ predefinedRangesView toMsg internal
+            , Calendar.view
+                { baseCalendar
+                    | target = internal.leftCal
+                    , prev = Just (handleEvent toMsg Prev internal)
+                }
+            , Calendar.view
+                { baseCalendar
+                    | target = internal.rightCal
+                    , next =
+                        if allowNext then
+                            Just (handleEvent toMsg Next internal)
 
-                    else
-                        Nothing
-            }
+                        else
+                            Nothing
+                }
+            ]
         , div [ class "EDRPFoot" ]
             [ span []
                 [ case internal.step of

@@ -28,6 +28,10 @@ $grey: rgb(155, 155, 155);
         }
     }
 
+    &__selectors {
+      display: flex;
+    }
+
     &__button {
         border: 0;
         text-transform: uppercase;
@@ -55,8 +59,6 @@ $grey: rgb(155, 155, 155);
     }
 
     &Presets {
-        float: left;
-
         &__list {
             margin: 0;
             padding: 10px;
@@ -89,7 +91,6 @@ $grey: rgb(155, 155, 155);
     }
 
     &Calendar {
-        float: left;
         margin: 0 10px 0 0;
         padding: 10px 0 0 10px;
         text-align: center;
@@ -193,18 +194,14 @@ $grey: rgb(155, 155, 155);
     }
 
     &Foot {
-        clear: both;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background: rgba($grey, 0.2);
         padding: 10px;
 
         &__actions {
-            float: right;
-        }
-
-        &::after {
-            clear: both;
-            content: "";
-            display: table;
+          margin-left: auto;
         }
     }
 }
