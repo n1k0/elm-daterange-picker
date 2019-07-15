@@ -1,6 +1,6 @@
 # elm-daterange-picker
 
-A date range picker written in [Elm](https://elm-lang.org/).
+A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://allo-media.github.io/elm-daterange-picker/)).
 
 ## How is this useful?
 
@@ -19,6 +19,39 @@ package takes a lot of inspiration from.
 
 You can look at how this package can be used by browsing this demo code
 [here](https://github.com/allo-media/elm-daterange-picker/blob/master/demo/Main.elm).
+
+## Usage
+
+```elm
+import DateRangePicker as Picker
+import Html exposing (Html)
+
+type alias Model =
+    { picker : Picker.State }
+
+type Msg
+    = PickerChanged Picker.State
+
+init : ( Model, Cmd Msg )
+init =
+    let
+        picker =
+            Picker.init Picker.defaultConfig Nothing
+    in
+    ( { picker = picker }
+    , Picker.now PickerChanged picker
+    )
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        PickerChanged state ->
+            { model | picker = state }
+
+view : Model -> Html Msg
+view model =
+    Picker.view PickerChanged model.picker
+```
 
 ## Customize styles
 

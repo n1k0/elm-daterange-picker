@@ -1,6 +1,6 @@
 module DateRangePicker.Calendar exposing (fromPosix, view, weekdayNames)
 
-import DateRangePicker.Helpers as Helpers
+import DateRangePicker.Helpers as Helpers exposing (sameDay)
 import DateRangePicker.Range as Range
 import DateRangePicker.Step as Step exposing (Step)
 import Html exposing (..)
@@ -14,6 +14,8 @@ import Time.Extra as TE
 type alias Config msg =
     { allowFuture : Bool
     , monthFormatter : Time.Month -> String
+    , hover : Posix -> msg
+    , hovered : Maybe Posix
     , noOp : msg
     , pick : Posix -> msg
     , prev : Maybe msg
@@ -55,29 +57,46 @@ weekdayNames weekdayFormatter weeksStartOn =
         |> List.map weekdayFormatter
 
 
+inRangePath : Maybe Posix -> Posix -> Posix -> Bool
+inRangePath maybeHovered begin day =
+    case maybeHovered of
+        Just hovered ->
+            Range.create begin hovered
+                |> Range.between day
+
+        Nothing ->
+            False
+
+
 dayCell : Config msg -> Posix -> Html msg
-dayCell { allowFuture, noOp, pick, step, target, today } day =
+dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
     let
         base =
-            { active = False, start = False, end = False, inRange = False }
+            { active = False
+            , start = False
+            , end = False
+            , inRange = False
+            , inPath = False
+            }
 
-        { active, start, end, inRange } =
+        { active, start, end, inRange, inPath } =
             case step of
                 Step.Initial ->
                     base
 
                 Step.Begin begin ->
                     { base
-                        | active = Helpers.sameDay utc begin day
-                        , start = Helpers.sameDay utc begin day
+                        | active = sameDay utc begin day
+                        , start = sameDay utc begin day
+                        , inPath = inRangePath hovered begin day
                     }
 
                 Step.Complete range ->
                     { base
-                        | active = Helpers.sameDay utc range.begin day || Helpers.sameDay utc range.end day
-                        , start = Helpers.sameDay utc range.begin day
-                        , end = Helpers.sameDay utc range.end day
-                        , inRange = Range.between range day
+                        | active = (range |> Range.beginsAt |> sameDay utc day) || (range |> Range.endsAt |> sameDay utc day)
+                        , start = range |> Range.beginsAt |> sameDay utc day
+                        , end = range |> Range.endsAt |> sameDay utc day
+                        , inRange = range |> Range.between day
                     }
 
         disabled =
@@ -85,15 +104,16 @@ dayCell { allowFuture, noOp, pick, step, target, today } day =
     in
     td
         ([ classList
-            [ ( "EDRPCalendar__cell", not disabled && Time.toMonth utc target == Time.toMonth utc day )
-            , ( "EDRPCalendar__cell--today", Helpers.sameDay utc day today )
+            [ ( "EDRPCalendar__cell", True )
+            , ( "EDRPCalendar__cell--today", sameDay utc day today )
             , ( "EDRPCalendar__cell--active", active )
-            , ( "EDRPCalendar__cell--inRange", inRange )
+            , ( "EDRPCalendar__cell--inRange", inRange || inPath )
             , ( "EDRPCalendar__cell--start", start )
             , ( "EDRPCalendar__cell--end", end )
-            , ( "EDRPCalendar__cell EDRPCalendar__cell--disabled", disabled )
-            , ( "EDRPCalendar__cell EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
+            , ( "EDRPCalendar__cell--disabled", disabled )
+            , ( "EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
             ]
+         , onMouseOver (hover day)
          , day |> Helpers.formatDate utc |> title
          ]
             ++ (if not disabled then
@@ -110,10 +130,10 @@ navLink : String -> Maybe msg -> Html msg
 navLink label maybeMsg =
     case maybeMsg of
         Just msg ->
-            th [ class <| label ++ " available", onClick msg ] [ span [] [] ]
+            th [ class <| "EDRPCalendar__nav", onClick msg ] [ text label ]
 
         Nothing ->
-            th [] [ span [] [] ]
+            th [] []
 
 
 view : Config msg -> Html msg
@@ -121,11 +141,11 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
     div [ class "EDRPCalendar" ]
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
-                [ tr []
-                    [ navLink "EDRPCalendar__nav EDRPCalendar__nav--prev" prev
-                    , th [ class "month", colspan 5 ]
+                [ tr [ class "EDRPCalendar__head" ]
+                    [ navLink "⭠" prev
+                    , th [ class "EDRPCalendar__month", colspan 5 ]
                         [ text (Helpers.shortMonth utc monthFormatter target) ]
-                    , navLink "EDRPCalendar__nav EDRPCalendar__nav--next" next
+                    , navLink "⭢" next
                     ]
                 , weekdayNames weekdayFormatter weeksStartOn
                     |> List.map (\name -> th [] [ text name ])

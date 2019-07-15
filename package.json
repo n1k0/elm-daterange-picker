@@ -4,9 +4,13 @@
   "description": "A daterange picker in Elm.",
   "private": true,
   "scripts": {
+    "build-demo": "npm run sass-build && elm make demo/Main.elm --output=demo/app.js",
+    "deploy": "npm run build-demo && gh-pages -m \"Publish demo [ci skip]\" -d demo",
+    "live": "elm-live demo/Main.elm -e node_modules/.bin/elm -p 3000 -d demo/ -- --output=demo/app.js",
     "test": "elm-test",
-    "sass": "node-sass-chokidar style/ -o demo  --output-style expanded --include-path node_modules/ -w",
-    "start": "elm-live demo/Main.elm -e node_modules/.bin/elm -p 3000 -d demo/ -- --output=demo/app.js"
+    "sass-build": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/",
+    "sass-watch": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/ -w",
+    "start": "npm run sass-build && concurrently --kill-others 'npm run sass-watch' 'npm run live'"
   },
   "repository": {
     "type": "git",
@@ -15,6 +19,7 @@
   "author": "Allo-Media <contact@allo-media.fr>",
   "license": "MIT",
   "devDependencies": {
+    "concurrently": "^4.1.1",
     "elm": "0.19.0-no-deps",
     "elm-analyse": "^0.16.4",
     "elm-format": "0.8.1",

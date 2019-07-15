@@ -1,6 +1,6 @@
 module DateRangePicker.Step exposing (Step(..), fromMaybe, next, toMaybe)
 
-import DateRangePicker.Range exposing (Range)
+import DateRangePicker.Range as Range exposing (Range)
 import Time exposing (Posix)
 
 
@@ -20,10 +20,10 @@ next picked step =
     case step of
         Begin begin ->
             if picked == begin then
-                Complete { begin = begin, end = begin }
+                Complete (Range.create begin begin)
 
             else if Time.posixToMillis picked > Time.posixToMillis begin then
-                Complete { begin = begin, end = picked }
+                Complete (Range.create begin picked)
 
             else
                 Begin picked

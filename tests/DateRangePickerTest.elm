@@ -110,21 +110,28 @@ rangeTests : Test
 rangeTests =
     describe "Range"
         [ describe "between"
-            [ begin
-                |> TE.addDays 1
-                |> Range.between sampleRange
+            [ sampleRange
+                |> Range.between (TE.addDays 1 begin)
                 |> Expect.equal True
                 |> asTest "should test if a datetime is comprised between a range"
-            , begin
-                |> TE.addDays 100
-                |> Range.between sampleRange
+            , sampleRange
+                |> Range.between (TE.addDays 100 begin)
                 |> Expect.equal False
                 |> asTest "should test if a datetime exceeds a range"
-            , begin
-                |> TE.addDays -100
-                |> Range.between sampleRange
+            , sampleRange
+                |> Range.between (TE.addDays -100 begin)
                 |> Expect.equal False
                 |> asTest "should test if a datetime is before a range"
+            ]
+        , describe "create"
+            [ Range.create begin end
+                |> Range.toTuple
+                |> Expect.equal ( begin, end )
+                |> asTest "should create a Range"
+            , Range.create end begin
+                |> Range.toTuple
+                |> Expect.equal ( begin, end )
+                |> asTest "should ensure consistency"
             ]
         , describe "decode"
             [ sampleJsonRange
@@ -140,7 +147,7 @@ rangeTests =
                 |> asTest "should encode a Range"
             ]
         , describe "format"
-            [ { begin = begin, end = begin |> TE.addHours 12 }
+            [ Range.create begin begin
                 |> Range.format utc
                 |> Expect.equal "on 2018-01-01"
                 |> asTest "should format a single day date range"
@@ -148,6 +155,18 @@ rangeTests =
                 |> Range.format utc
                 |> Expect.equal "from 2018-01-01 to 2018-01-08"
                 |> asTest "should format a multiple days period date range"
+            ]
+        , describe "fromString"
+            [ "2018-01-01T00:00:00.000Z;2018-01-08T23:59:59.999Z"
+                |> Range.fromString
+                |> Expect.equal (Just sampleRange)
+                |> asTest "should import a range from a String"
+            ]
+        , describe "toString"
+            [ sampleRange
+                |> Range.toString
+                |> Expect.equal "2018-01-01T00:00:00.000Z;2018-01-08T23:59:59.999Z"
+                |> asTest "should transform a range to a String"
             ]
         , describe "days"
             [ Range.days sampleRange
@@ -167,9 +186,14 @@ begin =
     TE.fromDateTuple utc ( 2018, Time.Jan, 1 )
 
 
+end : Posix
+end =
+    begin |> TE.addDays 7 |> TE.endOfDay utc
+
+
 sampleRange : Range
 sampleRange =
-    { begin = begin, end = begin |> TE.addDays 7 |> TE.endOfDay utc }
+    Range.create begin end
 
 
 sampleJsonRange : String
