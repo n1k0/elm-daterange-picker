@@ -4,8 +4,7 @@ A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://allo
 
 ## How is this useful?
 
-Default theme:
-![](https://i.imgur.com/A7I9AKo.jpg)
+![](https://i.imgur.com/qCH5hGn.png)
 
 Selecting a date range is a common operation for many Web applications. While
 there are offerings in the Elm ecosystem, we couldn't find any ergonomic
@@ -71,6 +70,7 @@ colors **after** calling our CSS, and it's done:
 ```
 
 So if you have questionable tastes, you can eventually obtain this:
+
 ![](https://i.imgur.com/B2acsjG.jpg)
 
 ## Install
