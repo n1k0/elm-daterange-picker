@@ -6982,7 +6982,6 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$fromPosix = F2(
 						},
 						A2(elm$core$List$range, -7, 42)))));
 	});
-var elm$html$Html$span = _VirtualDom_node('span');
 var elm$html$Html$th = _VirtualDom_node('th');
 var allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink = F2(
 	function (label, maybeMsg) {
@@ -6992,21 +6991,15 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink = F2(
 				elm$html$Html$th,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('EDRPCalendar__nav ' + label),
+						elm$html$Html$Attributes$class('EDRPCalendar__nav'),
 						elm$html$Html$Events$onClick(msg)
 					]),
 				_List_fromArray(
 					[
-						A2(elm$html$Html$span, _List_Nil, _List_Nil)
+						elm$html$Html$text(label)
 					]));
 		} else {
-			return A2(
-				elm$html$Html$th,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(elm$html$Html$span, _List_Nil, _List_Nil)
-					]));
+			return A2(elm$html$Html$th, _List_Nil, _List_Nil);
 		}
 	});
 var elm_community$list_extra$List$Extra$reverseAppend = F2(
@@ -7141,7 +7134,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$view = function (co
 									]),
 								_List_fromArray(
 									[
-										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, 'EDRPCalendar__nav--prev', prev),
+										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '⭠', prev),
 										A2(
 										elm$html$Html$th,
 										_List_fromArray(
@@ -7154,7 +7147,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Calendar$view = function (co
 												elm$html$Html$text(
 												A3(allo_media$elm_daterange_picker$DateRangePicker$Helpers$shortMonth, elm$time$Time$utc, monthFormatter, target))
 											])),
-										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, 'EDRPCalendar__nav--next', next)
+										A2(allo_media$elm_daterange_picker$DateRangePicker$Calendar$navLink, '⭢', next)
 									])),
 								A2(
 								elm$html$Html$tr,
@@ -7193,6 +7186,7 @@ var allo_media$elm_daterange_picker$DateRangePicker$Range$format = F2(
 		return A3(allo_media$elm_daterange_picker$DateRangePicker$Helpers$sameDay, zone, begin, end) ? ('on ' + A2(allo_media$elm_daterange_picker$DateRangePicker$Helpers$formatDate, zone, begin)) : ('from ' + (A2(allo_media$elm_daterange_picker$DateRangePicker$Helpers$formatDate, zone, begin) + (' to ' + A2(allo_media$elm_daterange_picker$DateRangePicker$Helpers$formatDate, zone, end))));
 	});
 var elm$html$Html$button = _VirtualDom_node('button');
+var elm$html$Html$span = _VirtualDom_node('span');
 var elm$json$Json$Encode$bool = _Json_wrap;
 var elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
