@@ -7,8 +7,9 @@ module DateRangePicker exposing
 
 {-| A date range picker widget.
 
+    import Browser
     import DateRangePicker as Picker
-    import Html exposing (Html)
+    import Html exposing (Html, text)
 
     type alias Model =
         { picker : Picker.State }
@@ -16,8 +17,8 @@ module DateRangePicker exposing
     type Msg
         = PickerChanged Picker.State
 
-    init : ( Model, Cmd Msg )
-    init =
+    init : () -> ( Model, Cmd Msg )
+    init _ =
         let
             picker =
                 Picker.init Picker.defaultConfig Nothing
@@ -30,11 +31,19 @@ module DateRangePicker exposing
     update msg model =
         case msg of
             PickerChanged state ->
-                { model | picker = state }
+                ( { model | picker = state }, Cmd.none )
 
     view : Model -> Html Msg
     view model =
         Picker.view PickerChanged model.picker
+
+    main =
+        Browser.element
+            { init = init
+            , update = update
+            , view = view
+            , subscriptions = .picker >> Picker.subscriptions PickerChanged
+            }
 
 
 # Configuration

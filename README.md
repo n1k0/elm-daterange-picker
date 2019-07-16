@@ -19,8 +19,9 @@ You can look at how this package can be used by browsing this demo code
 ## Usage
 
 ```elm
+import Browser
 import DateRangePicker as Picker
-import Html exposing (Html)
+import Html exposing (Html, text)
 
 type alias Model =
     { picker : Picker.State }
@@ -28,8 +29,8 @@ type alias Model =
 type Msg
     = PickerChanged Picker.State
 
-init : ( Model, Cmd Msg )
-init =
+init : () -> ( Model, Cmd Msg )
+init _ =
     let
         picker =
             Picker.init Picker.defaultConfig Nothing
@@ -42,11 +43,19 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         PickerChanged state ->
-            { model | picker = state }
+            ( { model | picker = state }, Cmd.none )
 
 view : Model -> Html Msg
 view model =
     Picker.view PickerChanged model.picker
+
+main =
+    Browser.element
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = .picker >> Picker.subscriptions PickerChanged
+        }
 ```
 
 ## Customize styles
