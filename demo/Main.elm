@@ -2,13 +2,11 @@ module Main exposing (main)
 
 import Browser
 import DateRangePicker as Picker
-import DateRangePicker.Helpers as Helpers
 import DateRangePicker.Range as Range exposing (Range)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Encode as Encode
-import Task exposing (Task)
 import Time
 
 
