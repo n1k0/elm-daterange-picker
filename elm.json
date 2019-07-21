@@ -3,7 +3,7 @@
     "name": "allo-media/elm-daterange-picker",
     "summary": "A date range picker.",
     "license": "MIT",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "exposed-modules": [
         "DateRangePicker",
         "DateRangePicker.Range"
