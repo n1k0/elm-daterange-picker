@@ -1,5 +1,5 @@
 module DateRangePicker exposing
-    ( Config, defaultConfig, configure
+    ( Config, defaultConfig, configure, reconfigure
     , State, init, now, nowTask, getRange, setRange, setToday, disable, isDisabled, open, isOpened
     , view
     , subscriptions
@@ -48,7 +48,7 @@ module DateRangePicker exposing
 
 # Configuration
 
-@docs Config, defaultConfig, configure
+@docs Config, defaultConfig, configure, reconfigure
 
 
 # State
@@ -147,6 +147,16 @@ defaultConfig =
 configure : (Config -> Config) -> Config
 configure updater =
     updater defaultConfig
+
+
+{-| Reconfigure a date range picker [`State`](#State).
+
+    state |> reconfigure (\current -> { current | weeksStartOn = Time.Sun })
+
+-}
+reconfigure : (Config -> Config) -> State -> State
+reconfigure updater (State ({ config } as internal)) =
+    State { internal | config = updater config }
 
 
 {-| DateRangePicker state.
