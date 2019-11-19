@@ -40,7 +40,8 @@ type Range
 
 
 type alias InternalRange =
-    { begin : Posix
+    { zone : Time.Zone
+    , begin : Posix
     , end : Posix
     }
 
@@ -53,14 +54,14 @@ Notes:
   - A Range is always treated as expressed in UTC.
 
 -}
-create : Posix -> Posix -> Range
-create begin end =
+create : Time.Zone -> Posix -> Posix -> Range
+create zone begin end =
     case TE.compare begin end of
         GT ->
-            Range { begin = end, end = begin }
+            Range { begin = end, end = TE.endOfDay zone begin, zone = zone }
 
         _ ->
-            Range { begin = begin, end = end }
+            Range { begin = begin, end = TE.endOfDay zone end, zone = zone }
 
 
 {-| Retrieves the Posix the [`Range`](#Range) begins at.
@@ -97,10 +98,9 @@ days (Range { begin, end }) =
 decode : Decoder Range
 decode =
     -- Note: date ranges received from the datepicker are expressed in UTC
-    Decode.map2 InternalRange
+    Decode.map2 (\begin end -> Range (InternalRange Time.utc begin end))
         (Decode.field "begin" Iso8601.decoder)
         (Decode.field "end" Iso8601.decoder)
-        |> Decode.andThen (Range >> Decode.succeed)
 
 
 {-| Encodes a [`Range`](#Range) to JSON.
@@ -131,7 +131,7 @@ fromString : String -> Maybe Range
 fromString str =
     case str |> String.split ";" |> List.map Iso8601.toTime of
         [ Ok begin, Ok end ] ->
-            Just (Range { begin = begin, end = end })
+            Just (Range { begin = begin, end = end, zone = Time.utc })
 
         _ ->
             Nothing

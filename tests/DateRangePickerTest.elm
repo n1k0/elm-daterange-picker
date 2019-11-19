@@ -124,11 +124,11 @@ rangeTests =
                 |> asTest "should test if a datetime is before a range"
             ]
         , describe "create"
-            [ Range.create begin end
+            [ Range.create utc begin end
                 |> Range.toTuple
                 |> Expect.equal ( begin, end )
                 |> asTest "should create a Range"
-            , Range.create end begin
+            , Range.create utc end begin
                 |> Range.toTuple
                 |> Expect.equal ( begin, end )
                 |> asTest "should ensure consistency"
@@ -147,7 +147,7 @@ rangeTests =
                 |> asTest "should encode a Range"
             ]
         , describe "format"
-            [ Range.create begin begin
+            [ Range.create utc begin begin
                 |> Range.format utc
                 |> Expect.equal "on 2018-01-01"
                 |> asTest "should format a single day date range"
@@ -193,7 +193,7 @@ end =
 
 sampleRange : Range
 sampleRange =
-    Range.create begin end
+    Range.create utc begin end
 
 
 sampleJsonRange : String

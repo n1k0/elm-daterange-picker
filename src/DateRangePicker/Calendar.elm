@@ -58,11 +58,11 @@ weekdayNames weekdayFormatter weeksStartOn =
         |> List.map weekdayFormatter
 
 
-inRangePath : Maybe Posix -> Posix -> Posix -> Bool
-inRangePath maybeHovered begin day =
+inRangePath : Time.Zone -> Maybe Posix -> Posix -> Posix -> Bool
+inRangePath zone maybeHovered begin day =
     case maybeHovered of
         Just hovered ->
-            Range.create begin hovered
+            Range.create zone begin hovered
                 |> Range.between day
 
         Nothing ->
@@ -89,7 +89,7 @@ dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today, zone } d
                     { base
                         | active = sameDay zone begin day
                         , start = sameDay zone begin day
-                        , inPath = inRangePath hovered begin day
+                        , inPath = inRangePath zone hovered begin day
                     }
 
                 Step.Complete range ->

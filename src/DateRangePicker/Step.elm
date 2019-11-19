@@ -15,15 +15,15 @@ fromMaybe =
     Maybe.map Complete >> Maybe.withDefault Initial
 
 
-next : Posix -> Step -> Step
-next picked step =
+next : Time.Zone -> Posix -> Step -> Step
+next zone picked step =
     case step of
         Begin begin ->
             if picked == begin then
-                Complete (Range.create begin begin)
+                Complete (Range.create zone begin begin)
 
             else if Time.posixToMillis picked > Time.posixToMillis begin then
-                Complete (Range.create begin picked)
+                Complete (Range.create zone begin picked)
 
             else
                 Begin picked
