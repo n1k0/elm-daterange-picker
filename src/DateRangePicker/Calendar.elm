@@ -7,7 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import List.Extra as LE
-import Time exposing (Posix, utc)
+import Time exposing (Posix)
 import Time.Extra as TE
 
 
@@ -25,18 +25,19 @@ type alias Config msg =
     , today : Posix
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
+    , zone : Time.Zone
     }
 
 
-fromPosix : Time.Weekday -> Posix -> List (List Posix)
-fromPosix weeksStartOn posix =
+fromPosix : Time.Zone -> Time.Weekday -> Posix -> List (List Posix)
+fromPosix zone weeksStartOn posix =
     let
         base =
-            TE.startOfDay utc posix
+            TE.startOfDay zone posix
     in
     List.range -7 42
         |> List.map (\v -> TE.addDays v base)
-        |> LE.dropWhile (Time.toWeekday utc >> (/=) weeksStartOn)
+        |> LE.dropWhile (Time.toWeekday zone >> (/=) weeksStartOn)
         |> LE.groupsOf 7
         |> List.take 6
 
@@ -69,7 +70,7 @@ inRangePath maybeHovered begin day =
 
 
 dayCell : Config msg -> Posix -> Html msg
-dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
+dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today, zone } day =
     let
         base =
             { active = False
@@ -86,16 +87,16 @@ dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
 
                 Step.Begin begin ->
                     { base
-                        | active = sameDay utc begin day
-                        , start = sameDay utc begin day
+                        | active = sameDay zone begin day
+                        , start = sameDay zone begin day
                         , inPath = inRangePath hovered begin day
                     }
 
                 Step.Complete range ->
                     { base
-                        | active = (range |> Range.beginsAt |> sameDay utc day) || (range |> Range.endsAt |> sameDay utc day)
-                        , start = range |> Range.beginsAt |> sameDay utc day
-                        , end = range |> Range.endsAt |> sameDay utc day
+                        | active = (range |> Range.beginsAt |> sameDay zone day) || (range |> Range.endsAt |> sameDay zone day)
+                        , start = range |> Range.beginsAt |> sameDay zone day
+                        , end = range |> Range.endsAt |> sameDay zone day
                         , inRange = range |> Range.between day
                     }
 
@@ -105,16 +106,16 @@ dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
     td
         ([ classList
             [ ( "EDRPCalendar__cell", True )
-            , ( "EDRPCalendar__cell--today", sameDay utc day today )
+            , ( "EDRPCalendar__cell--today", sameDay zone day today )
             , ( "EDRPCalendar__cell--active", active )
             , ( "EDRPCalendar__cell--inRange", inRange || inPath )
             , ( "EDRPCalendar__cell--start", start )
             , ( "EDRPCalendar__cell--end", end )
             , ( "EDRPCalendar__cell--disabled", disabled )
-            , ( "EDRPCalendar__cell--off", Time.toMonth utc target /= Time.toMonth utc day )
+            , ( "EDRPCalendar__cell--off", Time.toMonth zone target /= Time.toMonth zone day )
             ]
          , onMouseOver (hover day)
-         , day |> Helpers.formatDate utc |> title
+         , day |> Helpers.formatDate zone |> title
          ]
             ++ (if not disabled then
                     [ onClick (pick day) ]
@@ -123,7 +124,7 @@ dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today } day =
                     [ onClick noOp ]
                )
         )
-        [ day |> Time.toDay utc |> String.fromInt |> text ]
+        [ day |> Time.toDay zone |> String.fromInt |> text ]
 
 
 navLink : String -> Maybe msg -> Html msg
@@ -137,14 +138,14 @@ navLink label maybeMsg =
 
 
 view : Config msg -> Html msg
-view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as config) =
+view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter, zone } as config) =
     div [ class "EDRPCalendar" ]
         [ table [ class "EDRPCalendar__table" ]
             [ thead []
                 [ tr [ class "EDRPCalendar__head" ]
                     [ navLink "◄" prev
                     , th [ class "EDRPCalendar__month", colspan 5 ]
-                        [ text (Helpers.shortMonth utc monthFormatter target) ]
+                        [ text (Helpers.shortMonth zone monthFormatter target) ]
                     , navLink "►" next
                     ]
                 , weekdayNames weekdayFormatter weeksStartOn
@@ -152,7 +153,7 @@ view ({ next, prev, target, weeksStartOn, weekdayFormatter, monthFormatter } as 
                     |> tr []
                 ]
             , target
-                |> fromPosix weeksStartOn
+                |> fromPosix zone weeksStartOn
                 |> List.map (List.map (dayCell config) >> tr [])
                 |> tbody []
             ]

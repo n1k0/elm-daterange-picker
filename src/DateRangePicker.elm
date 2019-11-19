@@ -77,7 +77,7 @@ import Html.Attributes as HA exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Decode
 import Task exposing (Task)
-import Time exposing (Posix, utc)
+import Time exposing (Posix)
 import Time.Extra as TE
 
 
@@ -93,6 +93,7 @@ import Time.Extra as TE
   - `sticky`: Make the picker always opened
   - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
+  - `zone`: A user [`Time.Zone`](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone) to compute relative datetimes against (default: `Time.utc`)
 
 -}
 type alias Config =
@@ -102,10 +103,11 @@ type alias Config =
     , inputClass : String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
-    , predefinedRanges : Posix -> List ( String, Range )
+    , predefinedRanges : Time.Zone -> Posix -> List ( String, Range )
     , sticky : Bool
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
+    , zone : Time.Zone
     }
 
 
@@ -135,6 +137,7 @@ defaultConfig =
     , sticky = False
     , weekdayFormatter = Helpers.weekdayToString
     , weeksStartOn = Time.Mon
+    , zone = Time.utc
     }
 
 
@@ -313,18 +316,18 @@ getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
 getCalendars config maybeRange today =
     case ( config.allowFuture, maybeRange ) of
         ( True, Just range ) ->
-            ( range |> Range.beginsAt |> TE.startOfMonth utc
-            , range |> Range.beginsAt |> Helpers.startOfNextMonth utc
+            ( range |> Range.beginsAt |> TE.startOfMonth config.zone
+            , range |> Range.beginsAt |> Helpers.startOfNextMonth config.zone
             )
 
         ( False, Just range ) ->
-            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth utc
-            , range |> Range.endsAt |> TE.startOfMonth utc
+            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth config.zone
+            , range |> Range.endsAt |> TE.startOfMonth config.zone
             )
 
         ( _, Nothing ) ->
-            ( today |> Helpers.startOfPreviousMonth utc
-            , today |> TE.startOfMonth utc
+            ( today |> Helpers.startOfPreviousMonth config.zone
+            , today |> TE.startOfMonth config.zone
             )
 
 
@@ -371,7 +374,7 @@ update msg ({ leftCal, rightCal, step } as internal) =
         Next ->
             { internal
                 | leftCal = rightCal
-                , rightCal = Helpers.startOfNextMonth utc rightCal
+                , rightCal = Helpers.startOfNextMonth internal.config.zone rightCal
             }
 
         NoOp ->
@@ -393,7 +396,7 @@ update msg ({ leftCal, rightCal, step } as internal) =
 
         Prev ->
             { internal
-                | leftCal = leftCal |> Helpers.startOfPreviousMonth utc
+                | leftCal = leftCal |> Helpers.startOfPreviousMonth internal.config.zone
                 , rightCal = leftCal
             }
 
@@ -414,29 +417,29 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
-defaultPredefinedRanges : Posix -> List ( String, Range )
-defaultPredefinedRanges today =
+defaultPredefinedRanges : Time.Zone -> Posix -> List ( String, Range )
+defaultPredefinedRanges zone today =
     let
         daysBefore n posix =
-            posix |> TE.addDays -n |> TE.startOfDay utc
+            posix |> TE.addDays -n |> TE.startOfDay zone
     in
     [ ( "Today"
-      , Range.create (TE.startOfDay utc today) (TE.endOfDay utc today)
+      , Range.create (TE.startOfDay zone today) (TE.endOfDay zone today)
       )
     , ( "Yesterday"
-      , Range.create (today |> daysBefore 1 |> TE.startOfDay utc) (today |> daysBefore 1 |> TE.endOfDay utc)
+      , Range.create (today |> daysBefore 1 |> TE.startOfDay zone) (today |> daysBefore 1 |> TE.endOfDay zone)
       )
     , ( "Last 7 days"
-      , Range.create (today |> daysBefore 7) (today |> TE.startOfDay utc |> TE.addMillis -1)
+      , Range.create (today |> daysBefore 7) (today |> TE.startOfDay zone |> TE.addMillis -1)
       )
     , ( "Last 30 days"
-      , Range.create (today |> daysBefore 30) (today |> TE.startOfDay utc |> TE.addMillis -1)
+      , Range.create (today |> daysBefore 30) (today |> TE.startOfDay zone |> TE.addMillis -1)
       )
     , ( "This month"
-      , Range.create (today |> TE.startOfMonth utc) today
+      , Range.create (today |> TE.startOfMonth zone) today
       )
     , ( "Last month"
-      , Range.create (today |> Helpers.startOfPreviousMonth utc) (today |> TE.startOfMonth utc |> TE.addMillis -1)
+      , Range.create (today |> Helpers.startOfPreviousMonth zone) (today |> TE.startOfMonth zone |> TE.addMillis -1)
       )
     ]
 
@@ -460,7 +463,7 @@ predefinedRangesView toMsg ({ config, step, today } as internal) =
     in
     div [ class "EDRPPresets" ]
         [ today
-            |> internal.config.predefinedRanges
+            |> internal.config.predefinedRanges config.zone
             |> List.map entry
             |> ul [ class "EDRPPresets__list" ]
         ]
@@ -483,12 +486,13 @@ panel toMsg (State internal) =
             , today = internal.today
             , weekdayFormatter = internal.config.weekdayFormatter
             , weeksStartOn = internal.config.weeksStartOn
+            , zone = internal.config.zone
             }
 
         allowNext =
             internal.config.allowFuture
-                || (internal.rightCal |> TE.startOfMonth utc |> Time.posixToMillis)
-                < (internal.today |> TE.startOfMonth utc |> Time.posixToMillis)
+                || (internal.rightCal |> TE.startOfMonth internal.config.zone |> Time.posixToMillis)
+                < (internal.today |> TE.startOfMonth internal.config.zone |> Time.posixToMillis)
 
         onMouseUp msg =
             custom "mouseup"
@@ -534,7 +538,7 @@ panel toMsg (State internal) =
                         text "Hint: pick an end date"
 
                     Step.Complete range ->
-                        range |> Range.format utc |> text
+                        range |> Range.format internal.config.zone |> text
                 ]
             , div [ class "EDRPFoot__actions" ]
                 [ if not internal.config.sticky then
@@ -597,7 +601,7 @@ view toMsg (State internal) =
             , "EDRP__input " ++ internal.config.inputClass |> String.trim |> class
             , HA.disabled internal.disabled
             , internal.current
-                |> Maybe.map (Range.format utc)
+                |> Maybe.map (Range.format internal.config.zone)
                 |> Maybe.withDefault internal.config.noRangeCaption
                 |> value
             , onClick <| handleEvent toMsg Open internal
