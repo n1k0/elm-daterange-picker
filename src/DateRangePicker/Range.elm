@@ -60,7 +60,7 @@ create begin end =
             Range { begin = end, end = begin }
 
         _ ->
-            Range { begin = begin, end = end |> TE.endOfDay Time.utc }
+            Range { begin = begin, end = end }
 
 
 {-| Retrieves the Posix the [`Range`](#Range) begins at.

@@ -26,7 +26,7 @@ calendarTests =
     describe "Calendar"
         [ describe "fromPosix"
             [ TE.fromDateTuple utc ( 2019, Time.Jul, 1 )
-                |> Calendar.fromPosix Time.Mon
+                |> Calendar.fromPosix Time.utc Time.Mon
                 |> toTestableCalendar
                 |> Expect.equal
                     [ [ 24, 25, 26, 27, 28, 29, 30 ]
@@ -38,7 +38,7 @@ calendarTests =
                     ]
                 |> asTest "should compute a calendar with weeks starting on Monday"
             , TE.fromDateTuple utc ( 2019, Time.Jul, 1 )
-                |> Calendar.fromPosix Time.Sun
+                |> Calendar.fromPosix Time.utc Time.Sun
                 |> toTestableCalendar
                 |> Expect.equal
                     [ [ 30, 1, 2, 3, 4, 5, 6 ]
