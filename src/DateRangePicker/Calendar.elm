@@ -36,7 +36,7 @@ fromPosix zone weeksStartOn posix =
             TE.startOfDay zone posix
     in
     List.range -7 42
-        |> List.map (\v -> TE.addDays v base)
+        |> List.map (\v -> TE.addDaysZ v zone base)
         |> LE.dropWhile (Time.toWeekday zone >> (/=) weeksStartOn)
         |> LE.groupsOf 7
         |> List.take 6

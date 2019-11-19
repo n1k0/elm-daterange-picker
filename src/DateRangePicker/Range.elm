@@ -32,8 +32,7 @@ import Time.Extra as TE
 
 
 {-| A time range between two
-[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix),
-always expressed in UTC.
+[`Time.Posix`](https://package.elm-lang.org/packages/elm/time/latest/Time#Posix).
 -}
 type Range
     = Range InternalRange
@@ -48,10 +47,7 @@ type alias InternalRange =
 
 {-| Creates a [`Range`](#Range) from two Posix timestamps.
 
-Notes:
-
-  - args order is not important as it's internally managed.
-  - A Range is always treated as expressed in UTC.
+Note: `Posix` args order is not important as it's internally managed.
 
 -}
 create : Time.Zone -> Posix -> Posix -> Range
