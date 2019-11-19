@@ -392,7 +392,7 @@ update msg ({ leftCal, rightCal, step } as internal) =
             }
 
         Pick picked ->
-            { internal | step = step |> Step.next picked }
+            { internal | step = step |> Step.next internal.config.zone picked }
 
         Prev ->
             { internal
@@ -424,22 +424,22 @@ defaultPredefinedRanges zone today =
             posix |> TE.addDays -n |> TE.startOfDay zone
     in
     [ ( "Today"
-      , Range.create (TE.startOfDay zone today) (TE.endOfDay zone today)
+      , Range.create zone (TE.startOfDay zone today) (TE.endOfDay zone today)
       )
     , ( "Yesterday"
-      , Range.create (today |> daysBefore 1 |> TE.startOfDay zone) (today |> daysBefore 1 |> TE.endOfDay zone)
+      , Range.create zone (today |> daysBefore 1 |> TE.startOfDay zone) (today |> daysBefore 1 |> TE.endOfDay zone)
       )
     , ( "Last 7 days"
-      , Range.create (today |> daysBefore 7) (today |> TE.startOfDay zone |> TE.addMillis -1)
+      , Range.create zone (today |> daysBefore 7) (today |> TE.startOfDay zone |> TE.addMillis -1)
       )
     , ( "Last 30 days"
-      , Range.create (today |> daysBefore 30) (today |> TE.startOfDay zone |> TE.addMillis -1)
+      , Range.create zone (today |> daysBefore 30) (today |> TE.startOfDay zone |> TE.addMillis -1)
       )
     , ( "This month"
-      , Range.create (today |> TE.startOfMonth zone) today
+      , Range.create zone (today |> TE.startOfMonth zone) today
       )
     , ( "Last month"
-      , Range.create (today |> Helpers.startOfPreviousMonth zone) (today |> TE.startOfMonth zone |> TE.addMillis -1)
+      , Range.create zone (today |> Helpers.startOfPreviousMonth zone) (today |> TE.startOfMonth zone |> TE.addMillis -1)
       )
     ]
 
