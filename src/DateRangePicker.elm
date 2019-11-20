@@ -313,21 +313,21 @@ open opened (State internal) =
 
 
 getCalendars : Config -> Maybe Range -> Posix -> ( Posix, Posix )
-getCalendars config maybeRange today =
-    case ( config.allowFuture, maybeRange ) of
+getCalendars { allowFuture, zone } maybeRange today =
+    case ( allowFuture, maybeRange ) of
         ( True, Just range ) ->
-            ( range |> Range.beginsAt |> TE.startOfMonth config.zone
-            , range |> Range.beginsAt |> Helpers.startOfNextMonth config.zone
+            ( range |> Range.beginsAt |> TE.startOfMonth zone
+            , range |> Range.beginsAt |> Helpers.startOfNextMonth zone
             )
 
         ( False, Just range ) ->
-            ( range |> Range.endsAt |> Helpers.startOfPreviousMonth config.zone
-            , range |> Range.endsAt |> TE.startOfMonth config.zone
+            ( range |> Range.endsAt |> TE.addDaysZ -1 zone |> TE.addMillis 1 |> Helpers.startOfPreviousMonth zone
+            , range |> Range.endsAt |> TE.startOfMonth zone
             )
 
         ( _, Nothing ) ->
-            ( today |> Helpers.startOfPreviousMonth config.zone
-            , today |> TE.startOfMonth config.zone
+            ( today |> Helpers.startOfPreviousMonth zone
+            , today |> TE.startOfMonth zone
             )
 
 
