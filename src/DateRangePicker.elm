@@ -83,6 +83,7 @@ import Time.Extra as TE
 
 {-| DateRangePicker configuration:
 
+  - `actionButtons`: Allow provide different labels for buttons at the bottom of calendar
   - `allowFuture`: Allow picking a range in the future
   - `applyRangeImmediately`: Apply predefined range immediately when clicked
   - `class`: CSS class name(s) to add to the component root element.
@@ -97,7 +98,8 @@ import Time.Extra as TE
 
 -}
 type alias Config =
-    { allowFuture : Bool
+    { actionButtons : ActionButtons
+    , allowFuture : Bool
     , applyRangeImmediately : Bool
     , class : String
     , inputClass : String
@@ -111,8 +113,23 @@ type alias Config =
     }
 
 
+{-| ActionButtons labels configuration:
+
+  - `close`: Button, which will close daterange-picker
+  - `clear`: Button, which will clear input string
+  - `apply`: Button, which will set new daterange
+
+-}
+type alias ActionButtons =
+    { close : String
+    , clear : String
+    , apply : String
+    }
+
+
 {-| A [`Config`](#Config) featuring the following default values:
 
+  - `actionButtons` : `{ close: "Close", clear: "Clear", apply: "Apply"}`
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
   - `class`: `""`
@@ -127,7 +144,8 @@ type alias Config =
 -}
 defaultConfig : Config
 defaultConfig =
-    { allowFuture = True
+    { actionButtons = defaultActionButtons
+    , allowFuture = True
     , applyRangeImmediately = True
     , class = ""
     , inputClass = ""
@@ -417,6 +435,11 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
+defaultActionButtons : ActionButtons
+defaultActionButtons =
+    ActionButtons "Close" "Clear" "Apply"
+
+
 defaultPredefinedRanges : Time.Zone -> Posix -> List ( String, Range )
 defaultPredefinedRanges zone today =
     let
@@ -473,7 +496,8 @@ panel : (State -> msg) -> State -> Html msg
 panel toMsg (State internal) =
     let
         baseCalendar =
-            { allowFuture = internal.config.allowFuture
+            { actionButtons = internal.config.actionButtons
+            , allowFuture = internal.config.allowFuture
             , hover = \posix -> handleEvent toMsg (Hover posix) internal
             , hovered = internal.hovered
             , monthFormatter = internal.config.monthFormatter
@@ -547,7 +571,7 @@ panel toMsg (State internal) =
                         , type_ "button"
                         , onClick <| handleEvent toMsg Close internal
                         ]
-                        [ text "Close" ]
+                        [ text baseCalendar.actionButtons.close ]
 
                   else
                     text ""
@@ -557,13 +581,13 @@ panel toMsg (State internal) =
                     , HA.disabled (internal.step == Step.Initial)
                     , onClick <| handleEvent toMsg Clear internal
                     ]
-                    [ text "Clear" ]
+                    [ text baseCalendar.actionButtons.clear ]
                 , button
                     [ class "EDRP__button EDRP__button--primary"
                     , type_ "button"
                     , onClick <| handleEvent toMsg (Apply (Step.toMaybe internal.step)) internal
                     ]
-                    [ text "Apply" ]
+                    [ text baseCalendar.actionButtons.apply ]
                 ]
             ]
         ]

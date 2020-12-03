@@ -12,7 +12,8 @@ import Time.Extra as TE
 
 
 type alias Config msg =
-    { allowFuture : Bool
+    { actionButtons : { close : String, clear : String, apply : String }
+    , allowFuture : Bool
     , monthFormatter : Time.Month -> String
     , hover : Posix -> msg
     , hovered : Maybe Posix
