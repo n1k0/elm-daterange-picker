@@ -557,10 +557,10 @@ panel toMsg (State internal) =
             [ span []
                 [ case internal.step of
                     Step.Initial ->
-                        text "Hint: pick a start date"
+                        text baseCalendar.hintText.pickStart
 
                     Step.Begin _ ->
-                        text "Hint: pick an end date"
+                        text baseCalendar.hintText.pickStart
 
                     Step.Complete range ->
                         range |> Range.format internal.config.zone |> text
