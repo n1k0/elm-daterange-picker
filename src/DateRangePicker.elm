@@ -87,6 +87,7 @@ import Time.Extra as TE
   - `allowFuture`: Allow picking a range in the future
   - `applyRangeImmediately`: Apply predefined range immediately when clicked
   - `class`: CSS class name(s) to add to the component root element.
+  - `hintText`: Allow translate hint text at the bottom of calendar
   - `inputClass`: CSS class name(s) to add to the component text input.
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
@@ -98,10 +99,11 @@ import Time.Extra as TE
 
 -}
 type alias Config =
-    { actionButtons : ActionButtons
+    { actionButtons : Calendar.ActionButtons
     , allowFuture : Bool
     , applyRangeImmediately : Bool
     , class : String
+    , hintText : Calendar.HintText
     , inputClass : String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
@@ -113,26 +115,13 @@ type alias Config =
     }
 
 
-{-| ActionButtons labels configuration:
-
-  - `close`: Button, which will close daterange-picker
-  - `clear`: Button, which will clear input string
-  - `apply`: Button, which will set new daterange
-
--}
-type alias ActionButtons =
-    { close : String
-    , clear : String
-    , apply : String
-    }
-
-
 {-| A [`Config`](#Config) featuring the following default values:
 
   - `actionButtons` : `{ close: "Close", clear: "Clear", apply: "Apply"}`
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
   - `class`: `""`
+  - `hintText`: `{ pickStart: "Hint: pick a start date", pickEnd: "Hint: pick an end date" }`
   - `inputClass`: `""`
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
@@ -148,6 +137,7 @@ defaultConfig =
     , allowFuture = True
     , applyRangeImmediately = True
     , class = ""
+    , hintText = defaultHintText
     , inputClass = ""
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
@@ -435,9 +425,19 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
-defaultActionButtons : ActionButtons
+defaultActionButtons : Calendar.ActionButtons
 defaultActionButtons =
-    ActionButtons "Close" "Clear" "Apply"
+    { close = "Close"
+    , clear = "Clear"
+    , apply = "Apply"
+    }
+
+
+defaultHintText : Calendar.HintText
+defaultHintText =
+    { pickStart = "Hint: pick a start date"
+    , pickEnd = "Hint: pick an end date"
+    }
 
 
 defaultPredefinedRanges : Time.Zone -> Posix -> List ( String, Range )
@@ -498,6 +498,7 @@ panel toMsg (State internal) =
         baseCalendar =
             { actionButtons = internal.config.actionButtons
             , allowFuture = internal.config.allowFuture
+            , hintText = internal.config.hintText
             , hover = \posix -> handleEvent toMsg (Hover posix) internal
             , hovered = internal.hovered
             , monthFormatter = internal.config.monthFormatter

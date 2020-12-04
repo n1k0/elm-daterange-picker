@@ -1,4 +1,4 @@
-module DateRangePicker.Calendar exposing (fromPosix, view, weekdayNames)
+module DateRangePicker.Calendar exposing (ActionButtons, HintText, fromPosix, view, weekdayNames)
 
 import DateRangePicker.Helpers as Helpers exposing (sameDay)
 import DateRangePicker.Range as Range
@@ -11,10 +11,37 @@ import Time exposing (Posix)
 import Time.Extra as TE
 
 
+{-| ActionButtons labels configuration:
+
+  - `close`: Button, which will close daterange-picker
+  - `clear`: Button, which will clear input string
+  - `apply`: Button, which will set new daterange
+
+-}
+type alias ActionButtons =
+    { close : String
+    , clear : String
+    , apply : String
+    }
+
+
+{-| HintText configuration:
+
+  - `pickStart`: Hint at the bottom of calendar, before user pick the first date
+  - `pickEnd`: Hint at the bottom of calendar, after user pick the first date
+
+-}
+type alias HintText =
+    { pickStart : String
+    , pickEnd : String
+    }
+
+
 type alias Config msg =
-    { actionButtons : { close : String, clear : String, apply : String }
+    { actionButtons : ActionButtons
     , allowFuture : Bool
     , monthFormatter : Time.Month -> String
+    , hintText : HintText
     , hover : Posix -> msg
     , hovered : Maybe Posix
     , noOp : msg
