@@ -115,7 +115,6 @@ type alias Config =
 
 {-| A [`Config`](#Config) featuring the following default values:
 
-  - `actionButtons` :
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
   - `class`: `""`

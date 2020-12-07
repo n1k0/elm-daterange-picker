@@ -11,7 +11,7 @@ import Time exposing (Posix)
 import Time.Extra as TE
 
 
-{-| ActionButtons labels configuration:
+{-| Translations configuration:
 
   - `close`: Button, which will close daterange-picker
   - `clear`: Button, which will clear input string
