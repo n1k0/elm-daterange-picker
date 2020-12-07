@@ -83,32 +83,30 @@ import Time.Extra as TE
 
 {-| DateRangePicker configuration:
 
-  - `actionButtons`: Allow provide different labels for buttons at the bottom of calendar
   - `allowFuture`: Allow picking a range in the future
   - `applyRangeImmediately`: Apply predefined range immediately when clicked
   - `class`: CSS class name(s) to add to the component root element.
-  - `hintText`: Allow translate hint text at the bottom of calendar
   - `inputClass`: CSS class name(s) to add to the component text input.
   - `monthFormatter`: How to format a [`Time.Month`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `noRangeCaption`: The String to render when no range is set
   - `predefinedRanges`: Generates custom predefined ranges.
   - `sticky`: Make the picker always opened
+  - `translations` : Allow provide translations
   - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
   - `zone`: A user [`Time.Zone`](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone) to compute relative datetimes against (default: `Time.utc`)
 
 -}
 type alias Config =
-    { actionButtons : Calendar.ActionButtons
-    , allowFuture : Bool
+    { allowFuture : Bool
     , applyRangeImmediately : Bool
     , class : String
-    , hintText : Calendar.HintText
     , inputClass : String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
     , predefinedRanges : Time.Zone -> Posix -> List ( String, Range )
     , sticky : Bool
+    , translations : Calendar.Translations
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
     , zone : Time.Zone
@@ -117,32 +115,31 @@ type alias Config =
 
 {-| A [`Config`](#Config) featuring the following default values:
 
-  - `actionButtons` : `{ close: "Close", clear: "Clear", apply: "Apply"}`
+  - `actionButtons` :
   - `allowFuture`: `True`
   - `applyRangeImmediately`: `True`
   - `class`: `""`
-  - `hintText`: `{ pickStart: "Hint: pick a start date", pickEnd: "Hint: pick an end date" }`
   - `inputClass`: `""`
   - `monthFormatter`: Converts month names to their 3 chars English equivalent: `Jan`, `Feb`, etc.
   - `noRangeCaption`: `"N/A"`
   - `predefinedRanges`: `"Today"`, `"Yesterday"`, `"Last 7 days"`, `"Last 30 days"`, `"This month"` and `"Last month"`
   - `sticky`: `False`
+  - `translations`: `{ close: "Close", clear: "Clear", apply: "Apply", pickStart: "Hint: pick a start date", pickEnd: "Hint: pick an end date" }`
   - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
   - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
 -}
 defaultConfig : Config
 defaultConfig =
-    { actionButtons = defaultActionButtons
-    , allowFuture = True
+    { allowFuture = True
     , applyRangeImmediately = True
     , class = ""
-    , hintText = defaultHintText
     , inputClass = ""
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
     , predefinedRanges = defaultPredefinedRanges
     , sticky = False
+    , translations = defaultTranslations
     , weekdayFormatter = Helpers.weekdayToString
     , weeksStartOn = Time.Mon
     , zone = Time.utc
@@ -425,17 +422,12 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
-defaultActionButtons : Calendar.ActionButtons
-defaultActionButtons =
+defaultTranslations : Calendar.Translations
+defaultTranslations =
     { close = "Close"
     , clear = "Clear"
     , apply = "Apply"
-    }
-
-
-defaultHintText : Calendar.HintText
-defaultHintText =
-    { pickStart = "Hint: pick a start date"
+    , pickStart = "Hint: pick a start date"
     , pickEnd = "Hint: pick an end date"
     }
 
@@ -496,9 +488,7 @@ panel : (State -> msg) -> State -> Html msg
 panel toMsg (State internal) =
     let
         baseCalendar =
-            { actionButtons = internal.config.actionButtons
-            , allowFuture = internal.config.allowFuture
-            , hintText = internal.config.hintText
+            { allowFuture = internal.config.allowFuture
             , hover = \posix -> handleEvent toMsg (Hover posix) internal
             , hovered = internal.hovered
             , monthFormatter = internal.config.monthFormatter
@@ -508,6 +498,7 @@ panel toMsg (State internal) =
             , prev = Nothing
             , step = internal.step
             , target = internal.today
+            , translations = internal.config.translations
             , today = internal.today
             , weekdayFormatter = internal.config.weekdayFormatter
             , weeksStartOn = internal.config.weeksStartOn
@@ -557,10 +548,10 @@ panel toMsg (State internal) =
             [ span []
                 [ case internal.step of
                     Step.Initial ->
-                        text baseCalendar.hintText.pickStart
+                        text baseCalendar.translations.pickStart
 
                     Step.Begin _ ->
-                        text baseCalendar.hintText.pickStart
+                        text baseCalendar.translations.pickStart
 
                     Step.Complete range ->
                         range |> Range.format internal.config.zone |> text
@@ -572,7 +563,7 @@ panel toMsg (State internal) =
                         , type_ "button"
                         , onClick <| handleEvent toMsg Close internal
                         ]
-                        [ text baseCalendar.actionButtons.close ]
+                        [ text baseCalendar.translations.close ]
 
                   else
                     text ""
@@ -582,13 +573,13 @@ panel toMsg (State internal) =
                     , HA.disabled (internal.step == Step.Initial)
                     , onClick <| handleEvent toMsg Clear internal
                     ]
-                    [ text baseCalendar.actionButtons.clear ]
+                    [ text baseCalendar.translations.clear ]
                 , button
                     [ class "EDRP__button EDRP__button--primary"
                     , type_ "button"
                     , onClick <| handleEvent toMsg (Apply (Step.toMaybe internal.step)) internal
                     ]
-                    [ text baseCalendar.actionButtons.apply ]
+                    [ text baseCalendar.translations.apply ]
                 ]
             ]
         ]
