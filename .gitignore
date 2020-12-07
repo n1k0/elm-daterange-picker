@@ -3,3 +3,4 @@ docs.json
 elm-stuff
 node_modules
 package-lock.json
+.idea/
