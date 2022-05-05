@@ -1,20 +1,16 @@
 # elm-daterange-picker
 
-A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://allo-media.github.io/elm-daterange-picker/)).
+A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://n1k0.github.io/elm-daterange-picker/)).
 
 ## How is this useful?
 
-![](https://i.imgur.com/qCH5hGn.png)
+![](https://i.imgur.com/NL66R88.png)
 
-Selecting a date range is a common operation for many Web applications. While
-there are offerings in the Elm ecosystem, we couldn't find any ergonomic
-equivalent of [daterangepicker](http://www.daterangepicker.com/), which this
-package takes a lot of inspiration from.
+Selecting a date range is a common operation for many Web applications. While there are offerings in the Elm ecosystem, we couldn't find any ergonomic equivalent of [daterangepicker](http://www.daterangepicker.com/), which this package takes a lot of inspiration from.
 
 ## Demo
 
-You can look at how this package can be used by browsing this demo code
-[here](https://github.com/allo-media/elm-daterange-picker/blob/master/demo/Main.elm).
+You can look at how this package can be used by browsing this demo code [here](https://github.com/n1k0/elm-daterange-picker/blob/master/demo/Main.elm).
 
 ## Usage
 
@@ -60,13 +56,9 @@ main =
 
 ## Customize styles
 
-By default, we have not defined any default `font-family`, so that the style
-fits any app/site.
+By default, we have not defined any default `font-family`, so that the style fits any app/site.
 
-You can use the [style.css] file or its [SCSS source] as a starting point for
-fine-tuning the default styles of the datepicker, which also uses CSS variables
-to help you tweaking most colors used by the component; just add your own root
-colors **after** calling our CSS, and it's done:
+You can use the [style.css] file or its [SCSS source] as a starting point for fine-tuning the default styles of the datepicker, which also uses CSS variables to help you tweaking most colors used by the component; just add your own root colors **after** calling our CSS, and it's done:
 
 ```CSS
 :root {
@@ -92,25 +84,15 @@ So if you have questionable tastes, you can eventually obtain this:
 
 ## Run the demo
 
-The demo is powered by [elm-live](https://github.com/wking-io/elm-live), meaning
-any code changes will trigger a page reload. Neat!
+The demo is powered by [parcel](https://parceljs.org/), meaning any code changes will trigger a page reload. Neat!
 
     npm start
 
-Then head to [localhost:3000](http://localhost:3000/) from your browser.
-
-### Hacking on the demo with Atom & Elmjutsu
-
-If you've configured Atom & Elmjutsu to use `./node_modules/.bin/elm` as the
-default path to the Elm executable, you'll need a trick for having the compiler
-working when editing `demo/Main.elm`:
-
-    mkdir -P demo/node_modules/.bin
-    ln -sf ../../../node_modules/.bin/elm demo/node_modules/.bin/elm
+Then head to [localhost:1234](http://localhost:1234/) from your browser.
 
 ## License
 
 MIT
 
-[style.css]: https://allo-media.github.io/elm-daterange-picker/style.css
-[scss source]: https://github.com/allo-media/elm-daterange-picker/blob/master/style/style.scss
+[style.css]: https://n1k0.github.io/elm-daterange-picker/style.css
+[scss source]: https://github.com/n1k0/elm-daterange-picker/blob/master/style/style.scss
