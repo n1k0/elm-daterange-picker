@@ -90,9 +90,14 @@ The demo is powered by [parcel](https://parceljs.org/), meaning any code changes
 
 Then head to [localhost:1234](http://localhost:1234/) from your browser.
 
+## Credits
+
+- [BeardedBear](https://github.com/BeardedBear) for the default styles.
+- [Allo-Media](https://www.allo-media.net/) for initially backing up the package development.
+
 ## License
 
 MIT
 
-[style.css]: https://n1k0.github.io/elm-daterange-picker/style.css
-[scss source]: https://github.com/n1k0/elm-daterange-picker/blob/master/style/style.scss
+[style.css]: https://github.com/n1k0/elm-daterange-picker/blob/master/demo/style.css
+[scss source]: https://github.com/n1k0/elm-daterange-picker/blob/master/demo/style.scss
