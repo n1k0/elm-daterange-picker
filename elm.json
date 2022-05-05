@@ -3,7 +3,7 @@
   "name": "n1k0/elm-daterange-picker",
   "summary": "A date range picker.",
   "license": "MIT",
-  "version": "4.0.2",
+  "version": "1.0.0",
   "exposed-modules": ["DateRangePicker", "DateRangePicker.Range"],
   "elm-version": "0.19.1 <= v <= 0.20.0",
   "dependencies": {

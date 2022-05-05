@@ -2,6 +2,8 @@
 
 A date range picker written in [Elm](https://elm-lang.org/) ([Demo](https://n1k0.github.io/elm-daterange-picker/)).
 
+> Note: this package, previously known as `allo-media/elm-daterange-picker`, has moved to `n1k0/elm-daterange-picker`. New versions will be released from there, but starting from `1.0.0`.
+
 ## How is this useful?
 
 ![](https://i.imgur.com/NL66R88.png)
