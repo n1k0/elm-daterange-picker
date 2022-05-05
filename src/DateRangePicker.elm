@@ -91,6 +91,7 @@ import Time.Extra as TE
   - `noRangeCaption`: The String to render when no range is set
   - `predefinedRanges`: Generates custom predefined ranges.
   - `sticky`: Make the picker always opened
+  - `translations` : Allow provide translations
   - `weekdayFormatter`: How to format a [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months)
   - `weeksStartOn`: The [`Time.Weekday`](https://package.elm-lang.org/packages/elm/time/latest/Time#weeks-and-months) weeks start on (eg. `Time.Mon` or `Time.Sun`)
   - `zone`: A user [`Time.Zone`](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone) to compute relative datetimes against (default: `Time.utc`)
@@ -105,6 +106,7 @@ type alias Config =
     , noRangeCaption : String
     , predefinedRanges : Time.Zone -> Posix -> List ( String, Range )
     , sticky : Bool
+    , translations : Calendar.Translations
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
     , zone : Time.Zone
@@ -121,6 +123,7 @@ type alias Config =
   - `noRangeCaption`: `"N/A"`
   - `predefinedRanges`: `"Today"`, `"Yesterday"`, `"Last 7 days"`, `"Last 30 days"`, `"This month"` and `"Last month"`
   - `sticky`: `False`
+  - `translations`: `{ close: "Close", clear: "Clear", apply: "Apply", pickStart: "Hint: pick a start date", pickEnd: "Hint: pick an end date" }`
   - `weekdayFormatter`: Converts weekday names to their 2 chars English equivalent: `Mo`, `Tu`, etc.
   - `weeksStartOn`: `Time.Mon` (weeks start on Monday)
 
@@ -135,6 +138,7 @@ defaultConfig =
     , noRangeCaption = "N/A"
     , predefinedRanges = defaultPredefinedRanges
     , sticky = False
+    , translations = defaultTranslations
     , weekdayFormatter = Helpers.weekdayToString
     , weeksStartOn = Time.Mon
     , zone = Time.utc
@@ -417,6 +421,16 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
+defaultTranslations : Calendar.Translations
+defaultTranslations =
+    { close = "Close"
+    , clear = "Clear"
+    , apply = "Apply"
+    , pickStart = "Hint: pick a start date"
+    , pickEnd = "Hint: pick an end date"
+    }
+
+
 defaultPredefinedRanges : Time.Zone -> Posix -> List ( String, Range )
 defaultPredefinedRanges zone today =
     let
@@ -483,6 +497,7 @@ panel toMsg (State internal) =
             , prev = Nothing
             , step = internal.step
             , target = internal.today
+            , translations = internal.config.translations
             , today = internal.today
             , weekdayFormatter = internal.config.weekdayFormatter
             , weeksStartOn = internal.config.weeksStartOn
@@ -532,10 +547,10 @@ panel toMsg (State internal) =
             [ span []
                 [ case internal.step of
                     Step.Initial ->
-                        text "Hint: pick a start date"
+                        text baseCalendar.translations.pickStart
 
                     Step.Begin _ ->
-                        text "Hint: pick an end date"
+                        text baseCalendar.translations.pickStart
 
                     Step.Complete range ->
                         range |> Range.format internal.config.zone |> text
@@ -547,7 +562,7 @@ panel toMsg (State internal) =
                         , type_ "button"
                         , onClick <| handleEvent toMsg Close internal
                         ]
-                        [ text "Close" ]
+                        [ text baseCalendar.translations.close ]
 
                   else
                     text ""
@@ -557,13 +572,13 @@ panel toMsg (State internal) =
                     , HA.disabled (internal.step == Step.Initial)
                     , onClick <| handleEvent toMsg Clear internal
                     ]
-                    [ text "Clear" ]
+                    [ text baseCalendar.translations.clear ]
                 , button
                     [ class "EDRP__button EDRP__button--primary"
                     , type_ "button"
                     , onClick <| handleEvent toMsg (Apply (Step.toMaybe internal.step)) internal
                     ]
-                    [ text "Apply" ]
+                    [ text baseCalendar.translations.apply ]
                 ]
             ]
         ]
