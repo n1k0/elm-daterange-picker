@@ -72,7 +72,7 @@ You can use the [style.css] file or its [SCSS source] as a starting point for fi
 
 So if you have questionable tastes, you can eventually obtain this:
 
-![](https://i.imgur.com/rDUpzEB.png)
+![](https://i.imgur.com/sbDCvi6.png)
 
 ## Install
 

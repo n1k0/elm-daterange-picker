@@ -1,5 +1,6 @@
 module DateRangePicker exposing
     ( Config, defaultConfig, configure, reconfigure
+    , Translations
     , State, init, now, nowTask, getRange, setRange, setToday, disable, isDisabled, open, isOpened
     , view
     , subscriptions
@@ -49,6 +50,11 @@ module DateRangePicker exposing
 # Configuration
 
 @docs Config, defaultConfig, configure, reconfigure
+
+
+# Translations
+
+@docs Translations
 
 
 # State
@@ -106,11 +112,24 @@ type alias Config =
     , noRangeCaption : String
     , predefinedRanges : Time.Zone -> Posix -> List ( String, Range )
     , sticky : Bool
-    , translations : Calendar.Translations
+    , translations : Translations
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
     , zone : Time.Zone
     }
+
+
+{-| Translations configuration. Basically a record defining the following `String` attributes:
+
+  - `close`: Button, which will close daterange-picker
+  - `clear`: Button, which will clear input string
+  - `apply`: Button, which will set new daterange
+  - `pickStart`: Hint at the bottom of calendar, before user pick the first date
+  - `pickEnd`: Hint at the bottom of calendar, after user pick the first date
+
+-}
+type alias Translations =
+    Calendar.Translations
 
 
 {-| A [`Config`](#Config) featuring the following default values:
@@ -421,7 +440,7 @@ handleEvent toMsg msg =
     update msg >> State >> toMsg
 
 
-defaultTranslations : Calendar.Translations
+defaultTranslations : Translations
 defaultTranslations =
     { close = "Close"
     , clear = "Clear"
