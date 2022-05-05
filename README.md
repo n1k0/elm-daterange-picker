@@ -76,7 +76,7 @@ So if you have questionable tastes, you can eventually obtain this:
 
 ## Install
 
-    elm install allo-media/elm-daterange-picker
+    elm install n1k0/elm-daterange-picker
 
 ## Local install
 

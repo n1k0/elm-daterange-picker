@@ -1,6 +1,6 @@
 {
   "type": "package",
-  "name": "allo-media/elm-daterange-picker",
+  "name": "n1k0/elm-daterange-picker",
   "summary": "A date range picker.",
   "license": "MIT",
   "version": "4.0.2",
