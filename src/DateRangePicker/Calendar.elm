@@ -1,4 +1,4 @@
-module DateRangePicker.Calendar exposing (fromPosix, view, weekdayNames)
+module DateRangePicker.Calendar exposing (Translations, fromPosix, view, weekdayNames)
 
 import DateRangePicker.Helpers as Helpers exposing (sameDay)
 import DateRangePicker.Range as Range
@@ -9,6 +9,24 @@ import Html.Events exposing (..)
 import List.Extra as LE
 import Time exposing (Posix)
 import Time.Extra as TE
+
+
+{-| Translations configuration:
+
+  - `close`: Button, which will close daterange-picker
+  - `clear`: Button, which will clear input string
+  - `apply`: Button, which will set new daterange
+  - `pickStart`: Hint at the bottom of calendar, before user pick the first date
+  - `pickEnd`: Hint at the bottom of calendar, after user pick the first date
+
+-}
+type alias Translations =
+    { close : String
+    , clear : String
+    , apply : String
+    , pickStart : String
+    , pickEnd : String
+    }
 
 
 type alias Config msg =
@@ -23,6 +41,7 @@ type alias Config msg =
     , step : Step
     , target : Posix
     , today : Posix
+    , translations : Translations
     , weekdayFormatter : Time.Weekday -> String
     , weeksStartOn : Time.Weekday
     , zone : Time.Zone
