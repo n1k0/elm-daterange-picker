@@ -1,6 +1,5 @@
-demo/app.js
+.parcel-cache
+dist
 docs.json
 elm-stuff
 node_modules
-package-lock.json
-.idea

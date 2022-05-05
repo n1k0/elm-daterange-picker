@@ -11,15 +11,6 @@ import Time exposing (Posix)
 import Time.Extra as TE
 
 
-{-| Translations configuration:
-
-  - `close`: Button, which will close daterange-picker
-  - `clear`: Button, which will clear input string
-  - `apply`: Button, which will set new daterange
-  - `pickStart`: Hint at the bottom of calendar, before user pick the first date
-  - `pickEnd`: Hint at the bottom of calendar, after user pick the first date
-
--}
 type alias Translations =
     { close : String
     , clear : String
