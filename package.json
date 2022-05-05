@@ -4,13 +4,10 @@
   "description": "A daterange picker in Elm.",
   "private": true,
   "scripts": {
-    "build-demo": "npm run sass-build && elm make demo/Main.elm --output=demo/app.js",
-    "deploy": "npm run build-demo && gh-pages -m \"Publish demo [ci skip]\" -d demo",
-    "live": "elm-live demo/Main.elm -e node_modules/.bin/elm -p 3000 -d demo/ -- --output=demo/app.js",
+    "build": "rimraf dist && parcel build demo/index.html --public-url ./",
+    "deploy": "npm run build && gh-pages -m \"Publish demo [ci skip]\" -d dist",
     "postinstall": "elm-tooling install",
-    "test": "elm-test",
-    "sass-build": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/",
-    "sass-watch": "node-sass-chokidar style/ -o demo --output-style expanded --include-path node_modules/ -w",
+    "test": "npx elm-test",
     "start": "parcel serve demo/index.html --no-cache"
   },
   "repository": {
@@ -23,7 +20,9 @@
     "@parcel/transformer-elm": "^2.5.0",
     "@parcel/transformer-sass": "^2.5.0",
     "elm-tooling": "^1.8.0",
-    "parcel": "^2.5.0"
+    "gh-pages": "^3.2.3",
+    "parcel": "^2.5.0",
+    "rimraf": "^3.0.2"
   },
   "homepage": "https://github.com/n1k0/elm-daterange-picker#readme",
   "bugs": {
