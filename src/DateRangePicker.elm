@@ -107,6 +107,13 @@ type alias Config =
     { allowFuture : Bool
     , applyRangeImmediately : Bool
     , class : String
+    , dayFormatter :
+        Time.Zone
+        ->
+            { day : Time.Posix
+            , today : Time.Posix
+            }
+        -> Html Never
     , inputClass : String
     , monthFormatter : Time.Month -> String
     , noRangeCaption : String
@@ -152,6 +159,10 @@ defaultConfig =
     { allowFuture = True
     , applyRangeImmediately = True
     , class = ""
+    , dayFormatter =
+        \zone days ->
+            Helpers.dayToString zone days
+                |> Html.text
     , inputClass = ""
     , monthFormatter = Helpers.monthToString
     , noRangeCaption = "N/A"
@@ -509,6 +520,7 @@ panel toMsg (State internal) =
             { allowFuture = internal.config.allowFuture
             , hover = \posix -> handleEvent toMsg (Hover posix) internal
             , hovered = internal.hovered
+            , dayFormatter = internal.config.dayFormatter
             , monthFormatter = internal.config.monthFormatter
             , next = Nothing
             , noOp = handleEvent toMsg NoOp internal

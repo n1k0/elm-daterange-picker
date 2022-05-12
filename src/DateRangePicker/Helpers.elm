@@ -1,5 +1,6 @@
 module DateRangePicker.Helpers exposing
-    ( formatDate
+    ( dayToString
+    , formatDate
     , formatDateTime
     , formatTime
     , monthToString
@@ -12,6 +13,19 @@ module DateRangePicker.Helpers exposing
 
 import Time exposing (Posix)
 import Time.Extra as TE
+
+
+dayToString :
+    Time.Zone
+    ->
+        { day : Time.Posix
+        , today : Time.Posix
+        }
+    -> String
+dayToString zone { day } =
+    day
+        |> Time.toDay zone
+        |> String.fromInt
 
 
 formatDate : Time.Zone -> Posix -> String
