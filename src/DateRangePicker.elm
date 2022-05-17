@@ -569,7 +569,7 @@ panel toMsg (State internal) =
                         text baseCalendar.translations.pickStart
 
                     Step.Begin _ ->
-                        text baseCalendar.translations.pickStart
+                        text baseCalendar.translations.pickEnd
 
                     Step.Complete range ->
                         range |> Range.format internal.config.zone |> text
