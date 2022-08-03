@@ -22,6 +22,13 @@ type alias Translations =
 
 type alias Config msg =
     { allowFuture : Bool
+    , dayFormatter :
+        Time.Zone
+        ->
+            { day : Time.Posix
+            , today : Time.Posix
+            }
+        -> Html Never
     , monthFormatter : Time.Month -> String
     , hover : Posix -> msg
     , hovered : Maybe Posix
@@ -80,7 +87,7 @@ inRangePath zone maybeHovered begin day =
 
 
 dayCell : Config msg -> Posix -> Html msg
-dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today, zone } day =
+dayCell { allowFuture, dayFormatter, hover, hovered, noOp, pick, step, target, today, zone } day =
     let
         base =
             { active = False
@@ -134,7 +141,12 @@ dayCell { allowFuture, hover, hovered, noOp, pick, step, target, today, zone } d
                     [ onClick noOp ]
                )
         )
-        [ day |> Time.toDay zone |> String.fromInt |> text ]
+        [ dayFormatter zone
+            { day = day
+            , today = today
+            }
+            |> Html.map never
+        ]
 
 
 navLink : String -> Maybe msg -> Html msg
